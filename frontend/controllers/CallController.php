@@ -51,7 +51,7 @@ class CallController extends Controller
     {
         $searchModel = new CallSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-        $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
+        $dataProvider->sort->defaultOrder = ['created_at' => SORT_DESC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
