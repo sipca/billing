@@ -130,10 +130,9 @@ class Call extends \yii\db\ActiveRecord
         $m = Yii::$app->formatter->asDate($this->created_at, 'php:m');
         $d = Yii::$app->formatter->asDate($this->created_at, 'php:d');
 
-        $src = "$y/$m/$d/$this->record_link";
+        $src = "/monitor/$y/$m/$d/$this->record_link";
         $audio = ' <audio controls>
   <source src="'.$src.'" type="audio/wav">
-  <source src="horse.mp3" type="audio/mpeg">
   Your browser does not support the audio tag.
 </audio>';
 

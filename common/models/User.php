@@ -135,10 +135,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         parent::afterSave($insert, $changedAttributes);
 
         LineToUser::deleteAll(["user_id" => $this->id]);
-        foreach ($this->_lines as $line_id => $value) {
-            if($value) {
-                $lineToUser = new LineToUser(["user_id" => $this->id, "line_id" => $line_id]);
-                $lineToUser->save();
+
+        if($this->_lines) {
+            foreach ($this->_lines as $line_id => $value) {
+                if($value) {
+                    $lineToUser = new LineToUser(["user_id" => $this->id, "line_id" => $line_id]);
+                    $lineToUser->save();
+                }
             }
         }
     }
