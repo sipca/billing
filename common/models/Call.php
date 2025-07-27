@@ -130,7 +130,7 @@ class Call extends \yii\db\ActiveRecord
         $m = Yii::$app->formatter->asDate($this->created_at, 'php:m');
         $d = Yii::$app->formatter->asDate($this->created_at, 'php:d');
 
-        $src = "/app/frontend/web/monitor/$y/$m/$d/$this->record_link";
+        $src = "/monitor/$y/$m/$d/$this->record_link";
 
         $base64 = base64_encode(file_get_contents($src));
 
