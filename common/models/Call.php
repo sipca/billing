@@ -132,12 +132,20 @@ class Call extends \yii\db\ActiveRecord
 
         $src = "/monitor/$y/$m/$d/$this->record_link";
 
-        $base64 = base64_encode(file_get_contents($src));
+        if(file_exists($src)) {
+            $base64 = base64_encode(file_get_contents($src));
 
-        $audio = ' <audio controls>
+            $audio = ' <audio controls>
   <source src="data:audio/wav;base64,'.$base64.'" type="audio/wav">
   Your browser does not support the audio tag.
 </audio>';
+        } else {
+            $audio = ' <audio controls>
+  <source src="" type="audio/wav">
+  Your browser does not support the audio tag.
+</audio>';
+        }
+
 
         return $audio;
     }
