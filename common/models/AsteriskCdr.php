@@ -38,10 +38,10 @@ use yii\db\ActiveRecord;
  */
 class AsteriskCdr extends ActiveRecord
 {
-//    public static function getDb()
-//    {
-//        return Yii::$app->asteriskdb;
-//    }
+    public static function getDb()
+    {
+        return Yii::$app->asteriskdb;
+    }
 
     public static function tableName()
     {
