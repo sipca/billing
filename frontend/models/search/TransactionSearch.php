@@ -60,7 +60,7 @@ class TransactionSearch extends Transaction
      */
     public function search($params, $formName = null)
     {
-        $query = Transaction::find();
+        $query = Transaction::find()->where(["user_id" => Yii::$app->user->id]);
 
         // add conditions that should always apply here
 
