@@ -84,7 +84,7 @@ class SiteController extends Controller
                 "defaultOrder" => ["created_at" => SORT_DESC],
             ],
             "pagination" => [
-                "pageSize" => 50,
+                "pageSize" => 25,
             ]
         ]);
 
