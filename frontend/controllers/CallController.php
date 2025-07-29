@@ -129,10 +129,11 @@ class CallController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionDownloadAudio($record)
+    public function actionDownloadAudio($record, $name = null)
     {
-        $e = explode('/', $record);
-        $name = $e[4];
+        if(!$name) {
+            $name = Yii::$app->security->generateRandomString();
+        }
         return Yii::$app->response->sendFile($record, $name);
     }
 
