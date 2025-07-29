@@ -132,8 +132,8 @@ class CallController extends Controller
     public function actionDownloadAudio($record)
     {
         $e = explode('/', $record);
-        $name = $e[5];
-        return Yii::$app->response->sendFile($record, $e);
+        $name = $e[4];
+        return Yii::$app->response->sendFile($record, $name);
     }
 
     /**
