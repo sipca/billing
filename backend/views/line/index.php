@@ -37,6 +37,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             [
+                'attribute' => 'pay_billing_day',
+                'value' => 'payBillingDayText'
+            ],
+            [
+                'attribute' => 'pay_date',
+                "visible" => Yii::$app->user->identity->isAdmin()
+            ],
+            [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Line $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);

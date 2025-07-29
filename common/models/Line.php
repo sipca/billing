@@ -2,6 +2,11 @@
 
 namespace common\models;
 
+use common\enums\LineTariffEnum;
+use common\enums\TransactionStatusEnum;
+use common\enums\TransactionTypeEnum;
+use DateTime;
+use IntlDateFormatter;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -12,6 +17,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $name
  * @property int|null $tariff_id
  * @property int|null $sip_num
+ * @property int|null $pay_billing_day
+ * @property int|null $pay_date
  * @property int $created_at
  * @property int $updated_at
  *
@@ -40,7 +47,7 @@ class Line extends \yii\db\ActiveRecord
         return [
             [['tariff_id'], 'default', 'value' => null],
             [['name'], 'required'],
-            [['tariff_id', 'created_at', 'updated_at', "sip_num"], 'integer'],
+            [['tariff_id', 'created_at', 'updated_at', "sip_num", "pay_billing_day", "pay_date"], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['name'], 'unique'],
             [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => LineTariff::class, 'targetAttribute' => ['tariff_id' => 'id']],
@@ -106,6 +113,31 @@ class Line extends \yii\db\ActiveRecord
     public function getUsers()
     {
         return $this->hasMany(User::class, ['id' => 'user_id'])->viaTable('line_to_user', ['line_id' => 'id']);
+    }
+
+    public function addTransactionToUsers() : void
+    {
+        if(!$this->users || !$this->tariff) return;
+
+        foreach ($this->users as $user) {
+            Transaction::create($user->id, TransactionTypeEnum::AUTOMATIC, -$this->tariff->price, $this->name . " " . LineTariffEnum::tryFrom($this->tariff->type)->name, TransactionStatusEnum::PAID);
+        }
+    }
+
+    public function getPayBillingDayText()
+    {
+        $formatter = new IntlDateFormatter(
+            Yii::$app->formatter->locale,
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::NONE,
+            'UTC',
+            IntlDateFormatter::GREGORIAN,
+            'EEEE' // Полное название дня недели
+        );
+
+        // "Sunday +N days" даёт нужный день, где N = $dayNumber
+        $date = new DateTime("Sunday +$this->pay_billing_day days");
+        return $formatter->format($date);
     }
 
 }

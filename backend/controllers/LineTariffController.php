@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\LineTariff;
 use backend\models\search\LineTariffSearch;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -80,8 +81,11 @@ class LineTariffController extends Controller
         $model = new LineTariff();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                $model->price *= 100;
+                if($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         } else {
             $model->loadDefaultValues();
@@ -102,9 +106,13 @@ class LineTariffController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->price /= 100;
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->price *= 100;
+            if($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [

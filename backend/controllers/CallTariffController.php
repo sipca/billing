@@ -82,8 +82,12 @@ class CallTariffController extends Controller
         $model = new CallTariff();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                $model->price_out *= 100;
+                $model->price_in *= 100;
+                if($model->save()){
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
             if($model->getErrors()) {
                 Yii::$app->session->setFlash("danger", VarDumper::dumpAsString($model->getErrors()));
@@ -107,9 +111,15 @@ class CallTariffController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->price_out /= 100;
+        $model->price_in /= 100;
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->price_out *= 100;
+            $model->price_in *= 100;
+            if($model->save()){
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [

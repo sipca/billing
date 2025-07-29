@@ -1,6 +1,7 @@
 <?php
 
 namespace frontend\controllers;
+ini_set("memory_limit", "-1");
 
 use common\models\Call;
 use frontend\models\search\CallSearch;

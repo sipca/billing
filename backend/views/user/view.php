@@ -34,7 +34,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'email:email',
-            'balance:currency',
+            [
+                'attribute' => 'balance',
+                'value' => function(\common\models\User $model){
+                    $class = "success";
+                    if($model->balance <= 0) {
+                        $class = "danger";
+                    }
+                    $balance = Yii::$app->formatter->asCurrency($model->balance);
+                    return "<span class='text-$class'>$balance</span>";
+                },
+                'format' => 'html',
+            ],
             'status',
             'role',
             'created_at:datetime',

@@ -24,7 +24,7 @@ $callTariffs = \common\models\CallTariff::find()->select(["name", "id"])->indexB
 
     <?= $form->field($model, 'default_call_tariff_id')->dropDownList($callTariffs) ?>
 
-    <?= $form->field($model, 'price')->textInput() ?>
+    <?= $form->field($model, 'price')->widget(\common\widgets\MoneyControl::class) ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

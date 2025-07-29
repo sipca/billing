@@ -31,11 +31,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'type',
-            'default_call_tariff_id',
-            'price',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'type',
+                'value' => function ($model) {
+                    return \common\enums\LineTariffEnum::tryFrom($model->type)->name;
+                }
+            ],
+            [
+                'attribute' => 'default_call_tariff_id',
+                'value' => function (\common\models\LineTariff $lineTariff) {
+                    return $lineTariff->defaultCallTariff->getShortString();
+                }
+            ],
+            'price:currency',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

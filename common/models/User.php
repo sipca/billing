@@ -180,4 +180,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
+
+    public function isAdmin() : bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
 }
