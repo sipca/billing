@@ -135,15 +135,21 @@ class Call extends \yii\db\ActiveRecord
         if(file_exists($src)) {
             $base64 = base64_encode(file_get_contents($src));
 
-            $audio = ' <audio controls>
+            $audio = '
+<audio controls>
   <source src="data:audio/wav;base64,'.$base64.'" type="audio/wav">
   Your browser does not support the audio tag.
-</audio>';
+</audio>
+<a href="/call/download-audio?record='.$src.'" target="_blank"><i class="fas fa-download"></i></a>
+';
         } else {
-            $audio = ' <audio controls>
+            $audio = '
+ <audio controls>
   <source src="" type="audio/wav">
   Your browser does not support the audio tag.
-</audio>';
+</audio>
+<a href="#"><i class="fas fa-download"></i></a>
+';
         }
 
 

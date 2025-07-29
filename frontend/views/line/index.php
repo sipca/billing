@@ -24,7 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             'sip_num',
-            'pay_billing_day',
+            [
+                'attribute' => 'pay_billing_day',
+                'value' => 'payBillingDayText'
+            ],
             [
                 'attribute' => 'tariff_id',
                 'value' => function (Line $model) {

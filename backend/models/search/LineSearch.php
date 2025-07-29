@@ -17,7 +17,7 @@ class LineSearch extends Line
     public function rules()
     {
         return [
-            [['id', 'tariff_id', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'tariff_id', 'created_at', 'updated_at', 'sip_num', 'pay_billing_day', 'pay_date'], 'integer'],
             [['name'], 'safe'],
         ];
     }
@@ -61,6 +61,9 @@ class LineSearch extends Line
         $query->andFilterWhere([
             'id' => $this->id,
             'tariff_id' => $this->tariff_id,
+            'sip_num' => $this->sip_num,
+            'pay_billing_day' => $this->pay_billing_day,
+            'pay_date' => $this->pay_date,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

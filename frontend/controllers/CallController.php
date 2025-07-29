@@ -129,6 +129,13 @@ class CallController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionDownloadAudio($record)
+    {
+        $e = explode('/', $record);
+        $name = $e[5];
+        return Yii::$app->response->sendFile($record, $e);
+    }
+
     /**
      * Finds the Call model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
