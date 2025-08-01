@@ -62,8 +62,11 @@ class BillingController extends Controller
     public function actionNotify()
     {
         $users = User::find()
+            ->where(["is not", "telegram_chat_id", null])
             ->all();
         foreach ($users as $user) {
+            if(!$user->telegram_chat_id) continue;
+
             $balance = \Yii::$app->formatter->asCurrency($user->balance);
             $text = "👤 <b>$user->username</b>" . PHP_EOL . PHP_EOL;
             $text .= "💰Balance: <b>$balance</b>";
