@@ -5,6 +5,7 @@ namespace console\controllers;
 use common\enums\LineTariffEnum;
 use common\models\Line;
 use common\models\User;
+use Yii;
 use yii\console\Controller;
 
 class BillingController extends Controller
@@ -67,8 +68,11 @@ class BillingController extends Controller
         foreach ($users as $user) {
             if(!$user->telegram_chat_id) continue;
 
-            $balance = \Yii::$app->formatter->asCurrency($user->balance);
+            $balance = Yii::$app->formatter->asCurrency($user->balance);
             $text = "👤 <b>$user->username</b>" . PHP_EOL . PHP_EOL;
+            if($user->balance < 5000) {
+                $text .= "❗️❗";
+            }
             $text .= "💰Balance: <b>$balance</b>";
             $user->sendMessageInTelegram($text);
         }
