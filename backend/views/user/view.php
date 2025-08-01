@@ -46,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'format' => 'html',
             ],
+            'telegram_chat_id',
             'status',
             'role',
             'created_at:datetime',

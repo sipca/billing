@@ -29,7 +29,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class Line extends \yii\db\ActiveRecord
 {
-
+    public $tariffs;
 
     /**
      * {@inheritdoc}
@@ -51,6 +51,7 @@ class Line extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 255],
             [['name'], 'unique'],
             [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => LineTariff::class, 'targetAttribute' => ['tariff_id' => 'id']],
+            [["tariffs"], "safe"]
         ];
     }
 
@@ -138,6 +139,26 @@ class Line extends \yii\db\ActiveRecord
         // "Sunday +N days" даёт нужный день, где N = $dayNumber
         $date = new DateTime("Sunday +$this->pay_billing_day days");
         return $formatter->format($date);
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+        $this->tariffs = CallTariffToLine::find()->where(["line_id" => $this->id])->select(["call_tariff_id"])->indexBy("call_tariff_id")->column();
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        CallTariffToLine::deleteAll(["line_id" => $this->id]);
+
+        if($this->tariffs) {
+            foreach ($this->tariffs as $tariff) {
+                $model = new CallTariffToLine(["line_id" => $this->id, "call_tariff_id" => $tariff]);
+                $model->save();
+            }
+        }
     }
 
 }

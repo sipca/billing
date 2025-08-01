@@ -1,6 +1,7 @@
 <?php
 
 use common\models\LineTariff;
+use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -34,6 +35,13 @@ for ($i = 1; $i <= 7; $i++) {
     <?= $form->field($model, 'tariff_id')->dropDownList($tariffs) ?>
     <?= $form->field($model, 'pay_billing_day')->dropDownList($days) ?>
     <?= $form->field($model, 'pay_date')->textInput() ?>
+    <?= $form->field($model, 'tariffs')->widget(Select2::class, [
+        "data" => \common\models\CallTariff::find()->select(["name", "id"])->indexBy("id")->column(),
+        "pluginOptions" => [
+            "allowClear" => true,
+            "multiple" => true
+        ]
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

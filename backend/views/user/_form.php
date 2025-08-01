@@ -24,6 +24,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'status')->dropDownList(\common\models\User::STATUSES) ?>
 
     <?= $form->field($model, 'role')->dropDownList(\common\models\User::ROLES) ?>
+    <?= $form->field($model, 'telegram_chat_id')->textInput() ?>
 
     <?php foreach (\common\models\Line::find()->all() as $line) { ?>
         <?=$form->field($model, "_lines[$line->id]")->checkbox(["label" => $line->name])?>

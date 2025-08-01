@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Telegram;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\web\IdentityInterface;
@@ -20,6 +22,7 @@ use yii\web\IdentityInterface;
  * @property int $role
  * @property int $created_at
  * @property int $updated_at
+ * @property string $telegram_chat_id
  *
  * @property LineToUser[] $lineToUsers
  * @property Line[] $lines
@@ -71,7 +74,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['status'], 'default', 'value' => 10],
             [['username', 'auth_key', 'password_hash', 'email'], 'required'],
             [['balance', 'status', 'created_at', 'updated_at', 'role'], 'integer'],
-            [['username', 'password_hash', 'email', 'password'], 'string', 'max' => 255],
+            [['username', 'password_hash', 'email', 'password', 'telegram_chat_id'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
@@ -184,5 +187,17 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function isAdmin() : bool
     {
         return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function sendMessageInTelegram(string $message) : bool
+    {
+        if(!$this->telegram_chat_id) return false;
+
+        $response = Request::sendMessage([
+            "chat_id" => $this->telegram_chat_id,
+            "text" => $message,
+            "parse_mode" => "HTML"
+        ]);
+        return $response->isOk();
     }
 }
