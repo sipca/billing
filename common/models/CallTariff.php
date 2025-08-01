@@ -49,8 +49,9 @@ class CallTariff extends \yii\db\ActiveRecord
         return [
             [['type', 'price_in','price_out', 'number_start_with'], 'default', 'value' => null],
             [['name'], 'required'],
-            [['type', 'price_in','price_out', 'created_at', 'updated_at'], 'integer'],
+            [['type', 'created_at', 'updated_at'], 'integer'],
             [['name', 'number_start_with'], 'string', 'max' => 255],
+            [['price_in','price_out'], "number"]
         ];
     }
 

@@ -51,6 +51,7 @@ class TransactionController extends Controller
         $searchModel = new TransactionSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
+        $dataProvider->pagination->pageSize = 50;
 
         return $this->render('index', [
             'searchModel' => $searchModel,

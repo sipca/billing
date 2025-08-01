@@ -33,13 +33,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'type',
                 'value' => function ($model) {
                     return \common\enums\LineTariffEnum::tryFrom($model->type)->name;
-                }
+                },
+                'filter' => \common\enums\LineTariffEnum::array()
             ],
             [
                 'attribute' => 'default_call_tariff_id',
                 'value' => function (LineTariff $model) {
                     return $model->defaultCallTariff->getShortString();
-                }
+                },
+                'filter' => \common\models\CallTariff::find()->select([ 'name', 'id'])->indexBy('id')->column(),
             ],
             'price:currency',
             [

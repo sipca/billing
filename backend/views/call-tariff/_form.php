@@ -20,8 +20,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'type')->dropDownList(\common\enums\CallTariffTypeEnum::array()) ?>
 
-    <?= $form->field($model, 'price_in')->textInput() ?>
-    <?= $form->field($model, 'price_out')->textInput() ?>
+    <?= $form->field($model, 'price_in')->widget(\common\widgets\MoneyControl::class) ?>
+    <?= $form->field($model, 'price_out')->widget(\common\widgets\MoneyControl::class) ?>
 
     <?= $form->field($model, 'number_start_with')->textInput(['maxlength' => true]) ?>
 

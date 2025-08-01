@@ -52,6 +52,7 @@ class LineController extends Controller
     {
         $searchModel = new LineSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider->sort->defaultOrder = ['sip_num' => SORT_ASC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,

@@ -39,9 +39,10 @@ class LineTariff extends \yii\db\ActiveRecord
         return [
             [['type', 'default_call_tariff_id', 'price'], 'default', 'value' => null],
             [['name'], 'required'],
-            [['type', 'default_call_tariff_id', 'price', 'created_at', 'updated_at'], 'integer'],
+            [['type', 'default_call_tariff_id', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['default_call_tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => CallTariff::class, 'targetAttribute' => ['default_call_tariff_id' => 'id']],
+            [["price"], "number"]
         ];
     }
 
@@ -61,7 +62,7 @@ class LineTariff extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'type' => 'Type',
-            'default_call_tariff_id' => 'Default Call Tariff ID',
+            'default_call_tariff_id' => 'Default Call Tariff',
             'price' => 'Price',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

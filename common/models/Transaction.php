@@ -43,9 +43,10 @@ class Transaction extends \yii\db\ActiveRecord
     {
         return [
             [['uuid', 'type', 'sum', 'description', 'status'], 'default', 'value' => null],
-            [['type', 'sum', 'status', 'created_at', 'updated_at', 'user_id', 'minus'], 'integer'],
+            [['type', 'status', 'created_at', 'updated_at', 'user_id', 'minus'], 'integer'],
             [['uuid', 'description'], 'string', 'max' => 255],
             [['uuid'], 'unique'],
+            [["sum"], "number"]
         ];
     }
 

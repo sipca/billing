@@ -43,7 +43,7 @@ class CallTariffToLine extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'call_tariff_id' => 'Call Tariff ID',
+            'call_tariff_id' => 'Call Tariff',
             'line_id' => 'Line ID',
         ];
     }

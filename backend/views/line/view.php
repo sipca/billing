@@ -31,9 +31,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'tariff_id',
-            'created_at',
-            'updated_at',
+            'sip_num',
+            [
+                'attribute' => 'tariff_id',
+                'label' => 'Tariff name',
+                'value' => function ($model) {
+                    $str = $model->tariff->name;
+
+                    if($model->tariff->default_call_tariff_id) {
+                        $str .= " - " . $model->tariff->defaultCallTariff->getShortString();
+                    }
+                    return $str;
+                },
+            ],
+            'payBillingDayText',
+            'pay_date',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

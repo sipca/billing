@@ -35,10 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function (Line $line) {
                     return $line->tariff->name;
                 },
+                'filter' => \common\models\LineTariff::find()->select(['name', 'id'])->indexBy('id')->column(),
             ],
             [
                 'attribute' => 'pay_billing_day',
-                'value' => 'payBillingDayText'
+                'value' => 'payBillingDayText',
+                'filter' => \common\enums\WeekDayEnum::array()
             ],
             [
                 'attribute' => 'pay_date',

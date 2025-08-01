@@ -83,8 +83,8 @@ class CallTariffController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-//                $model->price_out *= 100;
-//                $model->price_in *= 100;
+                $model->price_out *= 100;
+                $model->price_in *= 100;
                 if($model->save()){
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
