@@ -66,7 +66,7 @@ class BillingController extends Controller
         foreach ($users as $user) {
             $balance = \Yii::$app->formatter->asCurrency($user->balance);
             $text = "👤 <b>$user->username</b>" . PHP_EOL . PHP_EOL;
-            $text .= "💰Your actual balance is: <b>$balance</b>";
+            $text .= "💰Balance: <b>$balance</b>";
             $user->sendMessageInTelegram($text);
         }
     }
