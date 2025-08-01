@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'balance',
                 'value' => function(\common\models\User $model){
                     $class = "success";
-                    if($model->balance <= 0) {
+                    if($model->balance < 0) {
                         $class = "danger";
                     }
                     $balance = Yii::$app->formatter->asCurrency($model->balance);
