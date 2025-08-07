@@ -19,7 +19,7 @@ $this->title = 'Admin Panel';
                     <div class="table">
                         <table class="table table-bordered">
                             <tr>
-                                <th></th>
+                                <th>USER</th>
                                 <th>Tariffs</th>
                                 <th>IN</th>
                                 <th>OUT</th>

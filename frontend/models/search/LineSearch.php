@@ -19,7 +19,7 @@ class LineSearch extends Line
     {
         return [
             [['id', 'sip_num', 'tariff_id', 'created_at', 'updated_at', 'pay_billing_day'], 'integer'],
-            [['name', 'password'], 'safe'],
+            [['name', 'password', 'did_number'], 'safe'],
         ];
     }
 
