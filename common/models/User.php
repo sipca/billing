@@ -200,4 +200,46 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         ]);
         return $response->isOk();
     }
+
+    public function summaryByPeriod($date_start, $date_end) : array
+    {
+        $calls = Call::find()
+            ->joinWith(["line", "tariff", "line.users"])
+            ->where(["user.id" => $this->id])
+            ->andWhere([">=", "call.created_at", $date_start])
+            ->andWhere(["<=", "call.created_at", $date_end])
+            ->all();
+
+        $byTariffs = [];
+
+        foreach ($calls as $call) {
+            if(!$call->tariff_id) continue;
+
+            if(!isset($byTariffs[$call->tariff_id])) {
+                $byTariffs[$call->tariff_id] = [
+                    "name" => $call->tariff->name,
+                    "total_in_calls_count" => 0,
+                    "total_out_calls_count" => 0,
+                    "total_in_calls_duration" => 0,
+                    "total_out_calls_duration" => 0,
+                    "total_in_spent" => 0,
+                    "total_out_spent" => 0,
+                    "total_spent" => 0
+                ];
+            }
+
+            $byTariffs[$call->tariff_id] = [
+                "name" => $call->tariff->name,
+                "total_in_calls_count" => $call->direction === Call::DIRECTION_IN ? $byTariffs[$call->tariff_id]["total_in_calls_count"] + 1 : $byTariffs[$call->tariff_id]["total_in_calls_count"],
+                "total_out_calls_count" => $call->direction === Call::DIRECTION_OUT ? $byTariffs[$call->tariff_id]["total_out_calls_count"] + 1 : $byTariffs[$call->tariff_id]["total_out_calls_count"],
+                "total_in_calls_duration" => $call->direction === Call::DIRECTION_IN ? $byTariffs[$call->tariff_id]["total_in_calls_duration"] + $call->billing_duration : $byTariffs[$call->tariff_id]["total_in_calls_duration"],
+                "total_out_calls_duration" => $call->direction === Call::DIRECTION_OUT ? $byTariffs[$call->tariff_id]["total_out_calls_duration"] + $call->billing_duration : $byTariffs[$call->tariff_id]["total_out_calls_duration"],
+                "total_in_spent" => $call->direction === Call::DIRECTION_IN ? $byTariffs[$call->tariff_id]["total_in_spent"] + $call->getSum() : $byTariffs[$call->tariff_id]["total_in_spent"],
+                "total_out_spent" => $call->direction === Call::DIRECTION_OUT ? $byTariffs[$call->tariff_id]["total_out_spent"] + $call->getSum() : $byTariffs[$call->tariff_id]["total_out_spent"],
+                "total_spent" => $byTariffs[$call->tariff_id]["total_spent"] + $call->getSum()
+            ];
+        }
+
+        return $byTariffs;
+    }
 }

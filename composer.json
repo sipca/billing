@@ -27,7 +27,8 @@
         "kartik-v/yii2-money": "^1.2",
         "rmrevin/yii2-fontawesome": "~3.5",
         "kartik-v/yii2-widget-select2": "^2.2",
-        "longman/telegram-bot": "^0.83.1"
+        "longman/telegram-bot": "^0.83.1",
+        "ext-intl": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

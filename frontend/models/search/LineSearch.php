@@ -18,8 +18,8 @@ class LineSearch extends Line
     public function rules()
     {
         return [
-            [['id', 'sip_num', 'tariff_id', 'created_at', 'updated_at'], 'integer'],
-            [['name'], 'safe'],
+            [['id', 'sip_num', 'tariff_id', 'created_at', 'updated_at', 'pay_billing_day'], 'integer'],
+            [['name', 'password'], 'safe'],
         ];
     }
 

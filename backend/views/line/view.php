@@ -32,6 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'sip_num',
+            'did_number',
+            'password',
             [
                 'attribute' => 'tariff_id',
                 'label' => 'Tariff name',

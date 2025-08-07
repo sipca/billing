@@ -18,7 +18,7 @@ class LineSearch extends Line
     {
         return [
             [['id', 'tariff_id', 'created_at', 'updated_at', 'sip_num', 'pay_billing_day', 'pay_date'], 'integer'],
-            [['name'], 'safe'],
+            [['name', 'password', 'did_number'], 'safe'],
         ];
     }
 
@@ -69,6 +69,7 @@ class LineSearch extends Line
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'did_number', $this->did_number]);
 
         return $dataProvider;
     }

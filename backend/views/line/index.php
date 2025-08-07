@@ -30,6 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             'sip_num',
+            'did_number',
+            'password',
             [
                 'attribute' => 'tariff_id',
                 'value' => function (Line $line) {

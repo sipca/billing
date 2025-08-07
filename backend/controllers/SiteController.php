@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use common\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -61,7 +62,32 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $users = User::find()
+            ->where(["role" => User::ROLE_USER])
+            ->all();
+
+        $summary = $summaryTfByMinutes = [];
+
+        foreach ($users as $user) {
+            $data = $user->summaryByPeriod(
+                Yii::$app->formatter->asTimestamp("now 00:00:00"),
+                Yii::$app->formatter->asTimestamp("now 00:00:00 +1day")
+            );
+
+            if($data) {
+                $summary[$user->username] = $data;
+                foreach ($data as $tf_id => $tariff_data) {
+                    if(!isset($summaryTfByMinutes[$tf_id])) {
+                        $summaryTfByMinutes[$tariff_data["name"]] = 0;
+                    }
+
+                    $summaryTfByMinutes[$tariff_data["name"]] += $tariff_data["total_in_calls_duration"] + $tariff_data["total_out_calls_duration"];
+                }
+            }
+        }
+
+        Yii::debug($summaryTfByMinutes);
+        return $this->render('index', compact('summary', 'summaryTfByMinutes'));
     }
 
     /**

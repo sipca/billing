@@ -15,8 +15,10 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property int $id
  * @property string $name
+ * @property string $did_number
  * @property int|null $tariff_id
  * @property int|null $sip_num
+ * @property string $password
  * @property int|null $pay_billing_day
  * @property int|null $pay_date
  * @property int $created_at
@@ -48,7 +50,7 @@ class Line extends \yii\db\ActiveRecord
             [['tariff_id'], 'default', 'value' => null],
             [['name'], 'required'],
             [['tariff_id', 'created_at', 'updated_at', "sip_num", "pay_billing_day", "pay_date"], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            [['name', 'password', 'did_number'], 'string', 'max' => 255],
             [['name'], 'unique'],
             [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => LineTariff::class, 'targetAttribute' => ['tariff_id' => 'id']],
             [["tariffs"], "safe"]

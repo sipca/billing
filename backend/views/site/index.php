@@ -1,53 +1,59 @@
 <?php
 
 /** @var yii\web\View $this */
+/** @var array $summary */
+/** @var array $summaryTfByMinutes */
 
-$this->title = 'My Yii Application';
+$this->title = 'Admin Panel';
 ?>
+<script type="application/json" id="summaryTfByMinutes">
+    <?=json_encode($summaryTfByMinutes)?>
+</script>
 <div class="site-index">
+    <div class="row">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">Today stats</div>
+                <div class="card-body">
+                    <?php if($summary) { ?>
+                    <div class="table">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th></th>
+                                <th>Tariffs</th>
+                                <th>IN</th>
+                                <th>OUT</th>
+                                <th>TOTAL</th>
+                            </tr>
 
-    <div class="jumbotron text-center bg-transparent">
-        <h1 class="display-4">Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+                            <?php foreach ($summary as $user => $tariffs) { ?>
+                                <?php $rowspan = count($tariffs); $first = true; ?>
+                                <?php foreach ($tariffs as $tariff) { ?>
+                                    <tr>
+                                        <?php if ($first) { ?>
+                                            <td rowspan="<?= $rowspan ?>"><?= htmlspecialchars($user) ?></td>
+                                            <?php $first = false; ?>
+                                        <?php } ?>
+                                        <td><?= htmlspecialchars($tariff['name']) ?></td>
+                                        <td><?=$tariff["total_in_calls_count"]?> / <?=Yii::$app->formatter->asDuration($tariff["total_in_calls_duration"])?> / <?=Yii::$app->formatter->asCurrency($tariff["total_in_spent"])?></td>
+                                        <td><?=$tariff["total_out_calls_count"]?> / <?=Yii::$app->formatter->asDuration($tariff["total_out_calls_duration"])?> / <?=Yii::$app->formatter->asCurrency($tariff["total_out_spent"])?></td>
+                                        <td><?=Yii::$app->formatter->asCurrency($tariff["total_spent"])?></td>
+                                    </tr>
+                                <?php } ?>
+                            <?php } ?>
+                        </table>
+                    </div>
+                    <?php } ?>
+                </div>
             </div>
         </div>
-
+        <div class="col-4">
+            <div class="card">
+                <div class="card-header">Charts</div>
+                <div class="card-body">
+                    <canvas id="chart-pie-by-minutes"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

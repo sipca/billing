@@ -24,6 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             'sip_num',
+            'password',
+            'did_number',
             [
                 'attribute' => 'pay_billing_day',
                 'value' => 'payBillingDayText'

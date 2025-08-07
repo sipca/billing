@@ -31,6 +31,8 @@ for ($i = 1; $i <= 7; $i++) {
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'sip_num')->textInput() ?>
+    <?= $form->field($model, 'password')->textInput() ?>
+    <?= $form->field($model, 'did_number')->textInput() ?>
 
     <?= $form->field($model, 'tariff_id')->dropDownList($tariffs) ?>
     <?= $form->field($model, 'pay_billing_day')->dropDownList($days) ?>
