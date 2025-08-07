@@ -68,6 +68,7 @@ class LineSearch extends Line
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'did_number', $this->did_number]);
 
         return $dataProvider;
     }
