@@ -28,7 +28,8 @@
         "rmrevin/yii2-fontawesome": "~3.5",
         "kartik-v/yii2-widget-select2": "^2.2",
         "longman/telegram-bot": "^0.83.1",
-        "ext-intl": "*"
+        "ext-intl": "*",
+        "level23/pami": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -62,6 +63,10 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/level23/PAMI"
         }
     ]
 }

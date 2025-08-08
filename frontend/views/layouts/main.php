@@ -41,6 +41,7 @@ AppAsset::register($this);
             ['label' => Yii::t("app", "Calls"), 'url' => ['/call/index']],
             ['label' => Yii::t("app", "Transactions"), 'url' => ['/transaction/index']],
             ['label' => Yii::t("app", "Lines"), 'url' => ['/line/index']],
+            ['label' => Yii::t("app", "Dialer"), 'url' => ['/call/dialer']],
         ];
     }
 

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 ini_set("memory_limit", "-1");
 
 use common\models\Call;
+use frontend\models\DialerForm;
 use frontend\models\search\CallSearch;
 use Yii;
 use yii\filters\AccessControl;
@@ -135,6 +136,18 @@ class CallController extends Controller
             $name = Yii::$app->security->generateRandomString();
         }
         return Yii::$app->response->sendFile($record, $name);
+    }
+
+    public function actionDialer()
+    {
+        $model = new DialerForm();
+
+        if($model->load($this->request->post()) && $model->validate()) {
+            $model->dial();
+            Yii::$app->session->setFlash("success", "Dialed!");
+        }
+
+        return $this->render('dialer', compact('model'));
     }
 
     /**

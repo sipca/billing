@@ -1,0 +1,73 @@
+<?php
+
+namespace frontend\models;
+
+use common\models\Line;
+use PAMI\Client\Impl\ClientImpl;
+use PAMI\Message\Action\OriginateAction;
+use yii\base\Model;
+
+class DialerForm extends Model
+{
+    public $numbers;
+    public $lines;
+
+    public function rules()
+    {
+        return [
+            [['numbers', 'lines'], 'required'],
+            [['numbers', 'lines'], 'safe'],
+        ];
+    }
+
+    public function dial()
+    {
+        $dialer_trunk = env('DIALER_TRUNK');
+        $dialer_context = env('DIALER_CONTEXT');
+        $driver = env("AST_DRIVER", "PJSIP");
+
+        $options = [
+            'host' => env("AMI_HOST"),
+            'port' => 5038,
+            'username' => env("AMI_USERNAME"),
+            'secret' => env("AMI_SECRET"),
+            'connect_timeout' => 10,
+            'read_timeout' => 100
+        ];
+
+        $client = new ClientImpl($options);
+        $client->open();
+
+        $numbers = array_filter(array_map('trim', explode("\n", $this->numbers)));
+
+        $extString = "";
+        $lines = Line::find()
+            ->where(["id" => $this->lines])
+            ->all();
+
+        foreach ($lines as $line) {
+            if($extString) {
+                $extString .= "&";
+            }
+            $extString .= $driver."/" .$line->sip_num;
+        }
+
+        foreach ($numbers as $line) {
+            [$phone, $name] = array_map('trim', explode(',', $line));
+
+            $originate = new OriginateAction("$driver/$dialer_trunk/$phone");
+            $originate->setContext($dialer_context);
+            $originate->setExtension($phone);
+            $originate->setPriority(1);
+            $originate->setAsync(true);
+            $originate->setTimeout(35000);
+            $originate->setVariable('CLIENT_NAME', $name);
+            $originate->setVariable('CALLER_ID_NUMBER', $phone);
+            $originate->setVariable('INTERNAL_EXT', $extString);
+
+            $client->send($originate);
+            usleep(500000);
+        }
+
+    }
+}
