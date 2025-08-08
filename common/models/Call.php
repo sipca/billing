@@ -129,13 +129,18 @@ class Call extends \yii\db\ActiveRecord
         return 0;
     }
 
-    public function getRecord() : string
+    public function getRecordPath() : string
     {
         $y = Yii::$app->formatter->asDate($this->created_at, 'php:Y');
         $m = Yii::$app->formatter->asDate($this->created_at, 'php:m');
         $d = Yii::$app->formatter->asDate($this->created_at, 'php:d');
 
-        $src = "/monitor/$y/$m/$d/$this->record_link";
+        return "/monitor/$y/$m/$d/$this->record_link";
+    }
+
+    public function getRecord() : string
+    {
+        $src = $this->getRecordPath();
 
         if(file_exists($src)) {
             $base64 = base64_encode(file_get_contents($src));
@@ -148,15 +153,8 @@ class Call extends \yii\db\ActiveRecord
 <a href="/call/download-audio?record='.$src.'&name='.$this->call_id.'.wav" target="_blank"><i class="fas fa-download"></i></a>
 ';
         } else {
-            $audio = '
- <audio controls>
-  <source src="" type="audio/wav">
-  Your browser does not support the audio tag.
-</audio>
-<a href="#"><i class="fas fa-download"></i></a>
-';
+            $audio = '';
         }
-
 
         return $audio;
     }
