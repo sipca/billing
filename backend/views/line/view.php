@@ -48,6 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'payBillingDayText',
             'pay_date',
+            'tolerance_billing_duration',
             'created_at:datetime',
             'updated_at:datetime',
         ],

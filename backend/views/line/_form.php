@@ -44,6 +44,8 @@ for ($i = 1; $i <= 7; $i++) {
             "multiple" => true
         ]
     ]) ?>
+    <?= $form->field($model, 'tolerance_billing_duration')->textInput() ?>
+
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

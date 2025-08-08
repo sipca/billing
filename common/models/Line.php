@@ -21,6 +21,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $password
  * @property int|null $pay_billing_day
  * @property int|null $pay_date
+ * @property int|null $tolerance_billing_duration
  * @property int $created_at
  * @property int $updated_at
  *
@@ -49,7 +50,7 @@ class Line extends \yii\db\ActiveRecord
         return [
             [['tariff_id'], 'default', 'value' => null],
             [['name'], 'required'],
-            [['tariff_id', 'created_at', 'updated_at', "sip_num", "pay_billing_day", "pay_date"], 'integer'],
+            [['tariff_id', 'created_at', 'updated_at', "sip_num", "pay_billing_day", "pay_date", 'tolerance_billing_duration'], 'integer'],
             [['name', 'password', 'did_number'], 'string', 'max' => 255],
             [['name'], 'unique'],
             [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => LineTariff::class, 'targetAttribute' => ['tariff_id' => 'id']],
@@ -75,6 +76,7 @@ class Line extends \yii\db\ActiveRecord
             'tariff_id' => 'Tariff',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'tolerance_billing_duration' => 'Tolerance Billing Duration in seconds',
         ];
     }
 
