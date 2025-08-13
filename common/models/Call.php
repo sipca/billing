@@ -142,7 +142,7 @@ class Call extends \yii\db\ActiveRecord
     {
         $src = $this->getRecordPath();
 
-        if(file_exists($src)) {
+        if(is_file($src) && file_exists($src)) {
             $base64 = base64_encode(file_get_contents($src));
 
             $audio = '
