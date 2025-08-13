@@ -85,7 +85,7 @@ class CallSearch extends Call
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'line_id' => $this->line_id,
+            'line.name' => $this->line_id,
             'tariff_id' => $this->tariff_id,
             'duration' => $this->duration,
             'billing_duration' => $this->billing_duration,

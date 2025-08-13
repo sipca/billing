@@ -58,9 +58,19 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             if($this->_user)
-            return Yii::$app->user->login($this->getUser(), 3600 * 24 * 30);
+                return Yii::$app->user->login($this->getUser(), 3600 * 24 * 30);
         }
         
+        return false;
+    }
+
+    public function loginAsAdmin()
+    {
+        if ($this->validate()) {
+            if($this->_user && $this->_user->role == User::ROLE_ADMIN)
+                return Yii::$app->user->login($this->getUser(), 3600 * 24 * 30);
+        }
+
         return false;
     }
 
