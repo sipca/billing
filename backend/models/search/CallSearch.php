@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models\search;
+namespace backend\models\search;
 
 use kartik\daterange\DateRangeBehavior;
 use Yii;
@@ -62,11 +62,9 @@ class CallSearch extends Call
     {
         $query = Call::find()
             ->joinWith([
-                "line",
-                "tariff",
-                "line.users"
-            ])
-            ->where(["user.id" => Yii::$app->user->id]);
+                "line.tariff",
+                "tariff.prefixes",
+            ]);
 
         // add conditions that should always apply here
 

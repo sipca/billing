@@ -9,7 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var frontend\models\search\CallSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
-/* @var $totalSum int|mixed|null */
+/* @var $totalSum int */
 
 $this->title = 'Calls';
 $this->params['breadcrumbs'][] = $this->title;
@@ -17,8 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="call-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= \kartik\grid\GridView::widget([
         'dataProvider' => $dataProvider,
@@ -33,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'call_id',
                 'value' => function(\common\models\Call $model) {
                     return $model->call_id . " (" . $model->direction . ")";
-                }
+                },
             ],
             [
                 "attribute" => "line_id",
@@ -47,7 +45,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 "attribute" => "tariff_id",
                 "value" => function(\common\models\Call $model) {
                     return $model->tariff?->getShortString();
-                }
+                },
+                'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+                'filterWidgetOptions' => [
+                    'data' => [null => "not set"] + \common\models\CallTariff::find()->select(['name', 'id'])->indexBy('id')->column(),
+                ]
             ],
             [
                 "attribute" => "billing_duration",

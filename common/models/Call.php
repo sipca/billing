@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\enums\CallStatusEnum;
+use common\enums\CallTariffTypeEnum;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -121,10 +122,18 @@ class Call extends \yii\db\ActiveRecord
     public function getSum() : float
     {
         if($this->tariff) {
+            $conn_price = $this->status === CallStatusEnum::ANSWERED->value ? $this->tariff->price_connection_in : 0;
             if($this->direction === self::DIRECTION_OUT) {
-                return round($this->tariff->price_out * ($this->billing_duration / 60), 2);
+                $conn_price = $this->status === CallStatusEnum::ANSWERED->value ? $this->tariff->price_connection_out : 0;
+                return match ($this->tariff->type) {
+                    CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->price_out * (ceil($this->billing_duration / 60)), 2),
+                    default => round($conn_price + $this->tariff->price_out * ($this->billing_duration / 60), 2),
+                };
             }
-            return round($this->tariff->price_in * ($this->billing_duration / 60), 2);
+            return match ($this->tariff->type) {
+                CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->price_in * (ceil($this->billing_duration / 60)), 2),
+                default => round($conn_price + $this->tariff->price_in * ($this->billing_duration / 60), 2),
+            };
         }
         return 0;
     }

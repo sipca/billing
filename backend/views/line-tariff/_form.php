@@ -22,7 +22,9 @@ $callTariffs = \common\models\CallTariff::find()->select(["name", "id"])->indexB
 
     <?= $form->field($model, 'type')->dropDownList(LineTariffEnum::array()) ?>
 
-    <?= $form->field($model, 'default_call_tariff_id')->dropDownList($callTariffs) ?>
+    <?= $form->field($model, 'default_call_tariff_id')->widget(\kartik\select2\Select2::class, [
+        "data" => $callTariffs,
+    ]) ?>
 
     <?= $form->field($model, 'price')->widget(\common\widgets\MoneyControl::class) ?>
 

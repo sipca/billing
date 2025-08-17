@@ -18,12 +18,55 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'type')->dropDownList(\common\enums\CallTariffTypeEnum::array()) ?>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'type')->dropDownList(\common\enums\CallTariffTypeEnum::array()) ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'supplier_type')->dropDownList(\common\enums\CallTariffTypeEnum::array()) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'price_in')->widget(\common\widgets\MoneyControl::class) ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'supplier_price_in')->widget(\common\widgets\MoneyControl::class) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'price_out')->widget(\common\widgets\MoneyControl::class) ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'supplier_price_out')->widget(\common\widgets\MoneyControl::class) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'price_connection_in')->widget(\common\widgets\MoneyControl::class) ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'supplier_connection_price_in')->widget(\common\widgets\MoneyControl::class) ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'price_in')->widget(\common\widgets\MoneyControl::class) ?>
-    <?= $form->field($model, 'price_out')->widget(\common\widgets\MoneyControl::class) ?>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'price_connection_out')->widget(\common\widgets\MoneyControl::class) ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'supplier_connection_price_out')->widget(\common\widgets\MoneyControl::class) ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'number_start_with')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'number_start_with')->widget(\kartik\select2\Select2::class, [
+            "pluginOptions" => [
+                "allowClear" => true,
+                "tags" => true,
+                "multiple" => true,
+            ],
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

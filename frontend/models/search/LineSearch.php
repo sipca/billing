@@ -42,7 +42,10 @@ class LineSearch extends Line
      */
     public function search($params, $formName = null)
     {
-        $query = Line::find()->joinWith(['users'])->where(["line_to_user.user_id" => Yii::$app->user->id]);
+        $query = Line::find()
+            ->with(['tariff'])
+            ->joinWith(['users'])
+            ->where(["line_to_user.user_id" => Yii::$app->user->id]);
 
         // add conditions that should always apply here
 

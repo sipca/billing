@@ -1,11 +1,10 @@
 <?php
 
-namespace frontend\controllers;
+namespace backend\controllers;
 ini_set("memory_limit", "-1");
 
 use common\models\Call;
-use frontend\models\DialerForm;
-use frontend\models\search\CallSearch;
+use backend\models\search\CallSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -51,7 +50,10 @@ class CallController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new CallSearch();
+        $searchModel = new CallSearch([
+            "date_start" => Yii::$app->formatter->asDate('now', 'php:d-m-Y'),
+            "date_end" => Yii::$app->formatter->asDate('now+1day', 'php:d-m-Y'),
+        ]);
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->sort->defaultOrder = ['created_at' => SORT_DESC];
 
@@ -144,17 +146,6 @@ class CallController extends Controller
         return Yii::$app->response->sendFile($record, $name);
     }
 
-    public function actionDialer()
-    {
-        $model = new DialerForm();
-
-        if($model->load($this->request->post()) && $model->validate()) {
-            $model->dial();
-            Yii::$app->session->setFlash("success", "Dialed!");
-        }
-
-        return $this->render('dialer', compact('model'));
-    }
 
     /**
      * Finds the Call model based on its primary key value.

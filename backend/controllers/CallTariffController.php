@@ -52,6 +52,7 @@ class CallTariffController extends Controller
     {
         $searchModel = new CallTariffSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -80,11 +81,11 @@ class CallTariffController extends Controller
     public function actionCreate()
     {
         $model = new CallTariff();
+        $model->loadDefaultValues();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                $model->price_out *= 100;
-                $model->price_in *= 100;
+                $model->convertPrices();
                 if($model->save()){
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
@@ -111,12 +112,10 @@ class CallTariffController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->price_out /= 100;
-        $model->price_in /= 100;
+        $model->convertPrices(true);
 
         if ($this->request->isPost && $model->load($this->request->post())) {
-            $model->price_out *= 100;
-            $model->price_in *= 100;
+            $model->convertPrices();
             if($model->save()){
                 return $this->redirect(['view', 'id' => $model->id]);
             }

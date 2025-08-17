@@ -2,6 +2,7 @@
 
 namespace backend\assets;
 
+use rmrevin\yii\fontawesome\CdnProAssetBundle;
 use yii\web\AssetBundle;
 
 /**
@@ -12,7 +13,7 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'css/site.css?v=170825',
     ];
     public $js = [
         'https://cdn.jsdelivr.net/npm/chart.js',
@@ -21,5 +22,6 @@ class AppAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap5\BootstrapAsset',
+        CdnProAssetBundle::class
     ];
 }

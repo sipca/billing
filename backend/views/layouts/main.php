@@ -37,6 +37,7 @@ AppAsset::register($this);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'Users', 'url' => ['/user/index']],
+        ['label' => Yii::t("app", "Calls"), 'url' => ['/call/index', "CallSearch" => ["created_at" => Yii::$app->formatter->asDate("now", "php:Y-m-d") ." - " .  Yii::$app->formatter->asDate("now+1day", "php:Y-m-d")]]],
         ['label' => 'Lines', 'url' => ['/line/index']],
         ['label' => 'Lines Tariffs', 'url' => ['/line-tariff/index']],
         ['label' => 'Calls Tariffs', 'url' => ['/call-tariff/index']],

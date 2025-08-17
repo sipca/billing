@@ -41,7 +41,7 @@ class CallTariffSearch extends CallTariff
      */
     public function search($params, $formName = null)
     {
-        $query = CallTariff::find();
+        $query = CallTariff::find()->joinWith('prefixes');
 
         // add conditions that should always apply here
 
@@ -67,8 +67,10 @@ class CallTariffSearch extends CallTariff
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'number_start_with', $this->number_start_with]);
+        $query->andFilterWhere(['like', 'name', $this->name]);
+
+        $query
+            ->andFilterWhere(['like', 'number_prefix.prefix', $this->number_start_with]);
 
         return $dataProvider;
     }

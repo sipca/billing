@@ -39,7 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'price_in:currency',
             'price_out:currency',
-            'number_start_with',
+            [
+                "attribute" => "number_start_with",
+                "value" => function (CallTariff $model) {
+                    return implode(", ", $model->number_start_with);
+                },
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, CallTariff $model, $key, $index, $column) {

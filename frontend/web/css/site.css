@@ -71,6 +71,12 @@ a.desc:after {
     color: rgba(255, 255, 255, 0.5);
 }
 
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1500px;
+    }
+}
+
 @media(max-width:767px) {
     .navbar form > button.logout {
         display:block;
@@ -100,10 +106,4 @@ a.desc:after {
 .breadcrumb-item > a
 {
     text-decoration: none;
-}
-
-@media (min-width: 1400px) {
-    .container {
-        max-width: 1500px;
-    }
 }

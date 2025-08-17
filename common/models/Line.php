@@ -15,6 +15,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property int $id
  * @property string $name
+ * @property string $description
  * @property string $did_number
  * @property int|null $tariff_id
  * @property int|null $sip_num
@@ -32,7 +33,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class Line extends \yii\db\ActiveRecord
 {
-    public $tariffs;
+    public $_tariffs;
 
     /**
      * {@inheritdoc}
@@ -54,7 +55,7 @@ class Line extends \yii\db\ActiveRecord
             [['name', 'password', 'did_number'], 'string', 'max' => 255],
             [['name'], 'unique'],
             [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => LineTariff::class, 'targetAttribute' => ['tariff_id' => 'id']],
-            [["tariffs"], "safe"]
+            [["tariffs", "description"], "safe"]
         ];
     }
 
@@ -73,10 +74,16 @@ class Line extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'tariff_id' => 'Tariff',
+            'tariff_id' => 'Line Tariff',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'tolerance_billing_duration' => 'Tolerance Billing Duration in seconds',
+            "did_number" => 'DID Number',
+            'tariffs' => 'Call Tariffs assigned to line',
+            'pay_billing_day' => 'Payment billing day',
+            'pay_date' => 'Payment date',
+            'sip_num' => 'SIP Number',
+            'password' => 'SIP Password',
         ];
     }
 
@@ -145,10 +152,24 @@ class Line extends \yii\db\ActiveRecord
         return $formatter->format($date);
     }
 
-    public function afterFind()
+    public function getTariffs()
     {
-        parent::afterFind();
-        $this->tariffs = CallTariffToLine::find()->where(["line_id" => $this->id])->select(["call_tariff_id"])->indexBy("call_tariff_id")->column();
+        if(!$this->_tariffs) {
+            $this->_tariffs = CallTariffToLine::find()
+                ->where(["line_id" => $this->id])
+                ->select(["call_tariff_id"])
+                ->indexBy("call_tariff_id")
+                ->column();
+        }
+        return $this->_tariffs;
+    }
+
+    /**
+     * @param mixed $tariffs
+     */
+    public function setTariffs($tariffs): void
+    {
+        $this->_tariffs = $tariffs;
     }
 
     public function afterSave($insert, $changedAttributes)
@@ -157,8 +178,8 @@ class Line extends \yii\db\ActiveRecord
 
         CallTariffToLine::deleteAll(["line_id" => $this->id]);
 
-        if($this->tariffs) {
-            foreach ($this->tariffs as $tariff) {
+        if($this->_tariffs) {
+            foreach ($this->_tariffs as $tariff) {
                 $model = new CallTariffToLine(["line_id" => $this->id, "call_tariff_id" => $tariff]);
                 $model->save();
             }

@@ -29,23 +29,52 @@ for ($i = 1; $i <= 7; $i++) {
         ]
     ]); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'sip_num')->textInput() ?>
-    <?= $form->field($model, 'password')->textInput() ?>
-    <?= $form->field($model, 'did_number')->textInput() ?>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'did_number')->textInput() ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'sip_num')->textInput() ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'password')->textInput() ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'tariff_id')->dropDownList($tariffs) ?>
-    <?= $form->field($model, 'pay_billing_day')->dropDownList($days) ?>
-    <?= $form->field($model, 'pay_date')->textInput() ?>
-    <?= $form->field($model, 'tariffs')->widget(Select2::class, [
-        "data" => \common\models\CallTariff::find()->select(["name", "id"])->indexBy("id")->column(),
-        "pluginOptions" => [
-            "allowClear" => true,
-            "multiple" => true
-        ]
-    ]) ?>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'tariff_id')->widget(Select2::class, [
+                "data" => $tariffs,
+            ]) ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'tariffs')->widget(Select2::class, [
+                "data" => \common\models\CallTariff::find()->select(["name", "id"])->indexBy("id")->column(),
+                "pluginOptions" => [
+                    "allowClear" => true,
+                    "multiple" => true
+                ]
+            ]) ?>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'pay_billing_day')->dropDownList($days) ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'pay_date')->textInput() ?>
+        </div>
+    </div>
+
     <?= $form->field($model, 'tolerance_billing_duration')->textInput() ?>
-
+    <?= $form->field($model, 'description')->textarea() ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

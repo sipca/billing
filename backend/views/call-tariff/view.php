@@ -31,10 +31,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'type',
+            [
+                'attribute' => 'type',
+                'value' => \common\enums\CallTariffTypeEnum::tryFrom($model->type)->name
+            ],
             'price_in:currency',
+            'supplier_price_in:currency',
             'price_out:currency',
-            'number_start_with',
+            'supplier_price_out:currency',
+            'price_connection_in:currency',
+            'supplier_connection_price_in:currency',
+            'price_connection_out:currency',
+            'supplier_price_connection_out:currency',
+            [
+                "attribute" => "number_start_with",
+                "value" => implode(", ", $model->number_start_with),
+            ],
             'created_at:datetime',
             'updated_at:datetime',
         ],
