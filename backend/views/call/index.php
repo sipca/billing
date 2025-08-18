@@ -10,6 +10,7 @@ use yii\grid\GridView;
 /** @var frontend\models\search\CallSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 /* @var $totalSum int */
+/* @var $totalProfit float|int */
 
 $this->title = 'Calls';
 $this->params['breadcrumbs'][] = $this->title;
@@ -56,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 "value" => function(\common\models\Call $model) {
                     return Yii::$app->formatter->asDuration($model->billing_duration) . " (" . Yii::$app->formatter->asCurrency($model->getSum()) .")";
                 },
-                'pageSummary'=> Yii::$app->formatter->asCurrency($totalSum),
+                'pageSummary'=> Yii::$app->formatter->asCurrency($totalSum) ." | " . Yii::$app->formatter->asCurrency($totalProfit),
             ],
             [
                 "attribute" => "status",
