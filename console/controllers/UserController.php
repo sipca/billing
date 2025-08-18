@@ -25,4 +25,14 @@ class UserController extends Controller
             print_r($user->getErrors());
         }
     }
+
+    public function actionSetPassword($username, $password)
+    {
+        $user = User::findOne(["username" => $username]);
+        $user->password_hash = \Yii::$app->security->generatePasswordHash($password);
+        if($user->save()) {
+            echo "User $username set password\n";
+            return 0;
+        }
+    }
 }
