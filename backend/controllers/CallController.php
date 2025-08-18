@@ -55,7 +55,7 @@ class CallController extends Controller
             "date_end" => Yii::$app->formatter->asDate('now+1day', 'php:d-m-Y'),
         ]);
         $dataProvider = $searchModel->search($this->request->queryParams);
-        $dataProvider->sort->defaultOrder = ['created_at' => SORT_DESC];
+        $dataProvider->sort->defaultOrder = ['call.created_at' => SORT_DESC];
 
         $totalSum = $totalProfit = $totalSec = 0;
         foreach ($dataProvider->query->all() as $model) {
