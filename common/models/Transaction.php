@@ -65,6 +65,7 @@ class Transaction extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'uuid' => 'Uuid',
+            'user_id' => 'User',
             'type' => 'Type',
             'sum' => 'Sum',
             'description' => 'Description',

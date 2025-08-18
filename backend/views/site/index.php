@@ -37,7 +37,7 @@ $this->title = 'Admin Panel';
                                         <td><?= htmlspecialchars($tariff['name']) ?></td>
                                         <td><?=$tariff["total_in_calls_count"]?> / <?=Yii::$app->formatter->asDuration($tariff["total_in_calls_duration"])?> / <?=Yii::$app->formatter->asCurrency($tariff["total_in_spent"])?></td>
                                         <td><?=$tariff["total_out_calls_count"]?> / <?=Yii::$app->formatter->asDuration($tariff["total_out_calls_duration"])?> / <?=Yii::$app->formatter->asCurrency($tariff["total_out_spent"])?></td>
-                                        <td><?=Yii::$app->formatter->asCurrency($tariff["total_spent"])?></td>
+                                        <td><?=Yii::$app->formatter->asCurrency($tariff["total_spent"])?> (<?=Yii::$app->formatter->asCurrency($tariff["profit"])?>)</td>
                                     </tr>
                                 <?php } ?>
                             <?php } ?>

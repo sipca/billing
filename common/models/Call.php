@@ -138,6 +138,26 @@ class Call extends \yii\db\ActiveRecord
         return 0;
     }
 
+    public function getSumSupplier() : float
+    {
+        if($this->tariff) {
+            $conn_price = $this->status === CallStatusEnum::ANSWERED->value ? $this->tariff->supplier_connection_price_in : 0;
+            if($this->direction === self::DIRECTION_OUT) {
+                $conn_price = $this->status === CallStatusEnum::ANSWERED->value ? $this->tariff->supplier_connection_price_out : 0;
+
+                return match ($this->tariff->supplier_type) {
+                    CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->supplier_price_out * (ceil($this->billing_duration / 60)), 2),
+                    default => round($conn_price + $this->tariff->supplier_price_out * ($this->billing_duration / 60), 2),
+                };
+            }
+            return match ($this->tariff->supplier_type) {
+                CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->supplier_price_in * (ceil($this->billing_duration / 60)), 2),
+                default => round($conn_price + $this->tariff->supplier_price_in * ($this->billing_duration / 60), 2),
+            };
+        }
+        return 0;
+    }
+
     public function getRecordPath() : string
     {
         $y = Yii::$app->formatter->asDate($this->created_at, 'php:Y');

@@ -38,7 +38,14 @@ class TransactionController extends Controller
         ]);
 
         if($model->load(Yii::$app->request->post())) {
-            Transaction::create($model->user_id, TransactionTypeEnum::MANUAL, $model->sum *= $model->minus ? -100 : 100, $model->description, TransactionStatusEnum::PAID);
+            $transaction = Transaction::create($model->user_id, TransactionTypeEnum::MANUAL, $model->sum *= $model->minus ? -100 : 100, $model->description, TransactionStatusEnum::PAID);
+            $balance = Yii::$app->formatter->asCurrency($transaction->user->balance);
+            $sum = Yii::$app->formatter->asCurrency($transaction->sum);
+            $text = "👤 <b>{$transaction->user->username}</b>" . PHP_EOL . PHP_EOL;
+            $text .= "❗️The balance has been replenished ($sum)" . PHP_EOL;
+            $text .= "<b>💰 Actual balance: $balance</b>";
+
+            $transaction->user->sendMessageInTelegram($text);
             return $this->redirect(["user/view", "id" => $model->user_id]);
         }
 

@@ -224,7 +224,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
                     "total_out_calls_duration" => 0,
                     "total_in_spent" => 0,
                     "total_out_spent" => 0,
-                    "total_spent" => 0
+                    "total_spent" => 0,
+                    "profit" => 0,
                 ];
             }
 
@@ -236,7 +237,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
                 "total_out_calls_duration" => $call->direction === Call::DIRECTION_OUT ? $byTariffs[$call->tariff_id]["total_out_calls_duration"] + $call->billing_duration : $byTariffs[$call->tariff_id]["total_out_calls_duration"],
                 "total_in_spent" => $call->direction === Call::DIRECTION_IN ? $byTariffs[$call->tariff_id]["total_in_spent"] + $call->getSum() : $byTariffs[$call->tariff_id]["total_in_spent"],
                 "total_out_spent" => $call->direction === Call::DIRECTION_OUT ? $byTariffs[$call->tariff_id]["total_out_spent"] + $call->getSum() : $byTariffs[$call->tariff_id]["total_out_spent"],
-                "total_spent" => $byTariffs[$call->tariff_id]["total_spent"] + $call->getSum()
+                "total_spent" => $byTariffs[$call->tariff_id]["total_spent"] + $call->getSum(),
+                "profit" => $byTariffs[$call->tariff_id]["profit"] + ($call->getSum() - $call->getSumSupplier())
             ];
         }
 
