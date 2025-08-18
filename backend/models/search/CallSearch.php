@@ -22,8 +22,8 @@ class CallSearch extends Call
     public function rules()
     {
         return [
-            [['id', 'line_id', 'tariff_id', 'duration', 'billing_duration', 'status',  'updated_at'], 'integer'],
-            [['call_id', 'source', 'destination', 'record_link', 'created_at', 'direction', 'date_start', 'date_end'], 'safe'],
+            [['id', 'tariff_id', 'duration', 'billing_duration', 'status',  'updated_at'], 'integer'],
+            [['call_id', 'source', 'destination', 'record_link', 'created_at', 'direction', 'date_start', 'date_end', 'line_id'], 'safe'],
         ];
     }
 
@@ -80,10 +80,16 @@ class CallSearch extends Call
             return $dataProvider;
         }
 
+        if($this->line_id) {
+            $lines = explode(",", $this->line_id);
+            if($lines) {
+                $query->andFilterWhere(["in", "line.name", $lines]);
+            }
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'line.name' => $this->line_id,
             'call.tariff_id' => $this->tariff_id,
             'duration' => $this->duration,
             'billing_duration' => $this->billing_duration,
@@ -95,7 +101,8 @@ class CallSearch extends Call
             $query->andFilterWhere(['between', 'call.created_at', Yii::$app->formatter->asTimestamp($this->date_start), Yii::$app->formatter->asTimestamp($this->date_end)]);
         }
 
-        $query->andFilterWhere(['like', 'call_id', $this->call_id])
+        $query
+            ->andFilterWhere(['like', 'call_id', $this->call_id])
             ->andFilterWhere(['like', 'source', $this->source])
             ->andFilterWhere(['like', 'destination', $this->destination])
             ->andFilterWhere(['like', 'record_link', $this->record_link])
