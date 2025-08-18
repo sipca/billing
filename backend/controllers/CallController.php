@@ -56,6 +56,7 @@ class CallController extends Controller
         ]);
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->sort->defaultOrder = ['created_at' => SORT_DESC];
+        $dataProvider->pagination->pageSize = 20;
 
         $totalSum = $totalProfit = $totalSec = 0;
         foreach ($dataProvider->query->all() as $model) {

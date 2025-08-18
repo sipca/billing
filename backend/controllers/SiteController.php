@@ -86,7 +86,6 @@ class SiteController extends Controller
             }
         }
 
-        Yii::debug($summaryTfByMinutes);
         return $this->render('index', compact('summary', 'summaryTfByMinutes'));
     }
 
