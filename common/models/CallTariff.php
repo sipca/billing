@@ -120,7 +120,7 @@ class CallTariff extends \yii\db\ActiveRecord
 
     public function getPrefixes()
     {
-        return $this->hasMany(NumberPrefix::class, ["call_tariff_id" => "id"])->orderBy(["prefix" => SORT_DESC]);
+        return $this->hasMany(NumberPrefix::class, ["call_tariff_id" => "id"]);
     }
 
     public static function getTariffByLineIdAndNumber(int $line_id, string $num, ?int $direction = null) : ?CallTariff
@@ -129,9 +129,9 @@ class CallTariff extends \yii\db\ActiveRecord
 
         $num = preg_replace('/\D/', '', $num);
         $tariffs = self::find()
-            ->joinWith(["lines"])
-            ->with(['prefixes'])
+            ->joinWith(["lines", 'prefixes'])
             ->where(['line_id' => $line_id])
+            ->orderBy(["prefix" => SORT_DESC])
             ->all();
         foreach ($tariffs as $tariff) {
             if($tariff->prefixes) {
