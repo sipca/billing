@@ -57,9 +57,10 @@ class CallController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->sort->defaultOrder = ['created_at' => SORT_DESC];
 
-        $totalSum = $totalProfit = 0;
+        $totalSum = $totalProfit = $totalSec = 0;
         foreach ($dataProvider->query->all() as $model) {
             $totalSum += $model->sum;
+            $totalSec += $model->billing_duration;
             $totalProfit += $model->getSum() - $model->getSumSupplier();
         }
 
@@ -68,6 +69,7 @@ class CallController extends Controller
             'dataProvider' => $dataProvider,
             'totalSum' => $totalSum,
             'totalProfit' => $totalProfit,
+            'totalSec' => $totalSec,
         ]);
     }
 

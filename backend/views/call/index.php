@@ -11,6 +11,7 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 /* @var $totalSum int */
 /* @var $totalProfit float|int */
+/* @var $totalSec int|null */
 
 $this->title = 'Calls';
 $this->params['breadcrumbs'][] = $this->title;
@@ -50,7 +51,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
                 'filterWidgetOptions' => [
                     'data' => [null => "not set"] + \common\models\CallTariff::find()->select(['name', 'id'])->indexBy('id')->column(),
-                ]
+                ],
+                'pageSummary' => Yii::$app->formatter->asDuration($totalSec)
             ],
             [
                 "attribute" => "billing_duration",
