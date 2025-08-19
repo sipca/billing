@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\components\PjsipShowContactsAction;
 use PAMI\Client\Impl\ClientImpl;
 use PAMI\Message\Action\CommandAction;
 use PAMI\Message\Action\CoreShowChannelsAction;
@@ -24,7 +25,7 @@ class AsteriskController extends Controller
         $client = new ClientImpl($options);
         $client->open();
 
-        $response = $client->send(new CommandAction('PJSIPShowContacts'));
+        $response = $client->send(new PjsipShowContactsAction());
 
         print_r($response->getMessage());
     }
