@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use PAMI\Client\Impl\ClientImpl;
 use PAMI\Message\Action\CommandAction;
+use PAMI\Message\Action\CoreShowChannelsAction;
 use yii\console\Controller;
 
 class AsteriskController extends Controller
@@ -22,7 +23,7 @@ class AsteriskController extends Controller
         $client = new ClientImpl($options);
         $client->open();
 
-        $response = $client->send(new CommandAction("pjsip show contacts"));
+        $response = $client->send(new CoreShowChannelsAction());
 
         print_r($response->getMessage());
     }
