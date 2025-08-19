@@ -57,7 +57,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 "attribute" => "billing_duration",
                 "value" => function(\common\models\Call $model) {
-                    return Yii::$app->formatter->asDuration($model->billing_duration) . " (" . Yii::$app->formatter->asCurrency($model->getSum()) .")";
+                    $profit = $model->getSum() - $model->getSumSupplier();
+                    return Yii::$app->formatter->asDuration($model->billing_duration) . " (" . Yii::$app->formatter->asCurrency($model->getSum()) ." | ".Yii::$app->formatter->asCurrency($profit) .")";
                 },
                 'pageSummary'=> Yii::$app->formatter->asCurrency($totalSum) ." | " . Yii::$app->formatter->asCurrency($totalProfit),
             ],
