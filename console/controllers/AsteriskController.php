@@ -27,7 +27,13 @@ class AsteriskController extends Controller
 
         $response = $client->send(new PjsipShowContactsAction());
 
-        print_r($response);
+        $events = $response->getEvents();
+
+        foreach ($events as $event) {
+            echo $event->getKey('uri') . PHP_EOL;
+        }
+
+//        print_r($response);
         echo "\n";
     }
 }
