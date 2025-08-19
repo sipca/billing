@@ -15,8 +15,8 @@ class AsteriskController extends Controller
             'port' => 5038,
             'username' => env("AMI_USERNAME"),
             'secret' => env("AMI_SECRET"),
-            'connect_timeout' => 10,
-            'read_timeout' => 100
+            'connect_timeout' => 100,
+            'read_timeout' => 1000
         ];
 
         $client = new ClientImpl($options);
