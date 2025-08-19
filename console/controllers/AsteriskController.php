@@ -27,6 +27,7 @@ class AsteriskController extends Controller
 
         $response = $client->send(new PjsipShowContactsAction());
 
-        print_r($response->getMessage());
+        print_r($response);
+        echo "\n";
     }
 }
