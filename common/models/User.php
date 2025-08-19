@@ -244,4 +244,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
         return $byTariffs;
     }
+
+    public function canCall() : bool
+    {
+        return $this->balance > 0;
+    }
 }
