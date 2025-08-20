@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\enums\CallStatusEnum;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Yii;
@@ -201,7 +202,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return $response->isOk();
     }
 
-    public function summaryByPeriod($date_start, $date_end) : array
+    public function summaryByPeriod($date_start, $date_end): array
     {
         $calls = Call::find()
             ->joinWith(["line", "tariff", "line.users"])
@@ -210,40 +211,74 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             ->andWhere(["<=", "call.created_at", $date_end])
             ->all();
 
-        $byTariffs = [];
+        $byLines = $byTariffs = [];
 
         foreach ($calls as $call) {
-            if(!$call->tariff_id) continue;
-
-            if(!isset($byTariffs[$call->tariff_id])) {
-                $byTariffs[$call->tariff_id] = [
-                    "name" => $call->tariff->name,
-                    "total_in_calls_count" => 0,
-                    "total_out_calls_count" => 0,
-                    "total_in_calls_duration" => 0,
-                    "total_out_calls_duration" => 0,
-                    "total_in_spent" => 0,
-                    "total_out_spent" => 0,
-                    "total_spent" => 0,
-                    "profit" => 0,
-                ];
+            if ($call->line_id) {
+                $this->aggregate($byLines, $call->line_id, $call->line->name, $call);
             }
+            if ($call->tariff_id) {
+                $this->aggregate($byTariffs, $call->tariff_id, $call->tariff->name, $call);
+            }
+        }
 
-            $byTariffs[$call->tariff_id] = [
-                "name" => $call->tariff->name,
-                "total_in_calls_count" => $call->direction === Call::DIRECTION_IN ? $byTariffs[$call->tariff_id]["total_in_calls_count"] + 1 : $byTariffs[$call->tariff_id]["total_in_calls_count"],
-                "total_out_calls_count" => $call->direction === Call::DIRECTION_OUT ? $byTariffs[$call->tariff_id]["total_out_calls_count"] + 1 : $byTariffs[$call->tariff_id]["total_out_calls_count"],
-                "total_in_calls_duration" => $call->direction === Call::DIRECTION_IN ? $byTariffs[$call->tariff_id]["total_in_calls_duration"] + $call->billing_duration : $byTariffs[$call->tariff_id]["total_in_calls_duration"],
-                "total_out_calls_duration" => $call->direction === Call::DIRECTION_OUT ? $byTariffs[$call->tariff_id]["total_out_calls_duration"] + $call->billing_duration : $byTariffs[$call->tariff_id]["total_out_calls_duration"],
-                "total_in_spent" => $call->direction === Call::DIRECTION_IN ? $byTariffs[$call->tariff_id]["total_in_spent"] + $call->getSum() : $byTariffs[$call->tariff_id]["total_in_spent"],
-                "total_out_spent" => $call->direction === Call::DIRECTION_OUT ? $byTariffs[$call->tariff_id]["total_out_spent"] + $call->getSum() : $byTariffs[$call->tariff_id]["total_out_spent"],
-                "total_spent" => $byTariffs[$call->tariff_id]["total_spent"] + $call->getSum(),
-                "profit" => $byTariffs[$call->tariff_id]["profit"] + ($call->getSum() - $call->getSumSupplier())
+        return compact('byTariffs', 'byLines');
+    }
+
+    private function aggregate(array &$storage, int $key, string $name, Call $call): void
+    {
+        if (!isset($storage[$key])) {
+            $storage[$key] = [
+                "name" => $name,
+                "total_in_calls_count" => 0,
+                "total_out_calls_count" => 0,
+                "total_in_calls_duration" => 0,
+                "total_out_calls_duration" => 0,
+                "total_in_calls_answered" => 0,
+                "total_out_calls_answered" => 0,
+                "total_in_calls_answered_10" => 0,
+                "total_out_calls_answered_10" => 0,
+                "total_in_calls_answered_10_duration" => 0,
+                "total_out_calls_answered_10_duration" => 0,
+                "total_in_spent" => 0,
+                "total_out_spent" => 0,
+                "total_spent" => 0,
+                "profit" => 0,
             ];
         }
 
-        return $byTariffs;
+        $row = &$storage[$key];
+
+        if ($call->direction === Call::DIRECTION_IN) {
+            $row["total_in_calls_count"]++;
+            $row["total_in_calls_duration"] += $call->billing_duration;
+            $row["total_in_spent"] += $call->getSum();
+
+            if ($call->status === CallStatusEnum::ANSWERED->value) {
+                $row["total_in_calls_answered"]++;
+                if ($call->billing_duration >= 10) {
+                    $row["total_in_calls_answered_10"]++;
+                    $row["total_in_calls_answered_10_duration"] += $call->billing_duration;
+                }
+            }
+        } elseif ($call->direction === Call::DIRECTION_OUT) {
+            $row["total_out_calls_count"]++;
+            $row["total_out_calls_duration"] += $call->billing_duration;
+            $row["total_out_spent"] += $call->getSum();
+
+            if ($call->status === CallStatusEnum::ANSWERED->value) {
+                $row["total_out_calls_answered"]++;
+                if ($call->billing_duration >= 10) {
+                    $row["total_out_calls_answered_10"]++;
+                    $row["total_out_calls_answered_10_duration"] += $call->billing_duration;
+                }
+            }
+        }
+
+        $row["total_spent"] += $call->getSum();
+        $row["profit"] += $call->getSum() - $call->getSumSupplier();
     }
+
 
     public function canCall() : bool
     {

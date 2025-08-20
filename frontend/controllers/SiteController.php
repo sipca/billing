@@ -95,6 +95,7 @@ class SiteController extends Controller
                 Yii::$app->formatter->asTimestamp("now 00:00:00"),
                 Yii::$app->formatter->asTimestamp("now 00:00:00 +1day")
             );
+        $byTariffs = $byTariffs['byTariffs'];
 
         return $this->render('index', compact('callsDataProvider', 'byTariffs'));
     }
