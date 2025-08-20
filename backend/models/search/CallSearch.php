@@ -63,7 +63,7 @@ class CallSearch extends Call
         $query = Call::find()
             ->joinWith([
                 "line.tariff",
-                "tariff.prefixes",
+                "tariff",
             ]);
 
         // add conditions that should always apply here

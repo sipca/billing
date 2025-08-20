@@ -29,6 +29,32 @@ class AsteriskController extends Controller
 
         $events = $response->getEvents();
 
+        /**
+         * [keys:protected] => Array
+         * (
+         * [event] => ContactList
+         * [actionid] => 175.3557
+         * [objecttype] => contact
+         * [objectname] =>
+         * [viaaddr] =>
+         * [qualifytimeout] => 3.000000
+         * [qualify2xxonly] => false
+         * [callid] =>
+         * [regserver] =>
+         * [pruneonboot] => no
+         * [path] =>
+         * [endpoint] =>
+         * [viaport] =>
+         * [authenticatequalify] => no
+         * [uri] => sip:9002@1.1.1.1:50872;x-ast-orig-host=2.2.2.2:5060
+         * [qualifyfrequency] => 60
+         * [useragent] => dble
+         * [expirationtime] => 17556515
+         * [outboundproxy] =>
+         * [status] => Reachable
+         * [roundtripusec] => 54546
+         * )
+         */
         foreach ($events as $event) {
             echo $event->getKey('uri') . PHP_EOL;
         }
