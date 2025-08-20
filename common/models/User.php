@@ -199,6 +199,12 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             "text" => $message,
             "parse_mode" => "HTML"
         ]);
+
+        $response = Request::sendMessage([
+            "chat_id" => env('TELEGRAM_ADMIN_CHAT_ID'),
+            "text" => $message,
+            "parse_mode" => "HTML"
+        ]);
         return $response->isOk();
     }
 
