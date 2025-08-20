@@ -75,8 +75,8 @@ class SiteController extends Controller
             );
 
             if($data) {
-                $summary[$user->username] = $data["byLines"];
-                foreach ($data["byLines"] as $tf_id => $tariff_data) {
+                $summary[$user->username] = $data["byTariffs"];
+                foreach ($data["byTariffs"] as $tf_id => $tariff_data) {
                     if(!isset($summaryTfByMinutes[$tariff_data["name"]])) {
                         $summaryTfByMinutes[$tariff_data["name"]] = 0;
                     }
