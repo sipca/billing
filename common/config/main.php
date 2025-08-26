@@ -14,6 +14,6 @@ return [
         ],
         'formatter' => [
             'class' => \common\components\Formatter::class,
-        ]
+        ],
     ],
 ];

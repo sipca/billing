@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\components\ami\actions\PjsipShowContactsAction;
 use common\models\Line;
 use frontend\models\search\LineSearch;
 use yii\filters\AccessControl;
@@ -51,9 +52,16 @@ class LineController extends Controller
         $searchModel = new LineSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $client = \Yii::$app->ami;
+        $client->open();
+
+        $response = $client->send(new PjsipShowContactsAction());
+        $events = $response->getEvents();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'events' => $events,
         ]);
     }
 

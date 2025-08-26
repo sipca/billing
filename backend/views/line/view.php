@@ -1,19 +1,26 @@
 <?php
 
+use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var common\models\Line $model */
+/* @var $events \PAMI\Message\Event\EventMessage[] */
 
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Lines'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+$connectionInfo = $model->getConnectionInfo($events);
+$icon = FAS::i(FAS::_CIRCLE, [
+    "class" => $connectionInfo ? "text-success" : "text-danger",
+]);
 ?>
 <div class="line-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::encode($this->title) ?> <?=$icon?></h1>
 
     <p>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -54,5 +61,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'updated_at:datetime',
         ],
     ]) ?>
+
+    <?=$connectionInfo ? DetailView::widget([
+        "model" => $connectionInfo
+    ]) : ""?>
 
 </div>

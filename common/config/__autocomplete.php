@@ -21,7 +21,8 @@ class Yii {
 /**
  * @property yii\rbac\DbManager $authManager 
  * @property \yii\web\User|__WebUser $user
- * 
+ * @property \common\components\ami\ClientImpl $ami
+ *
  */
 class __Application {
 }

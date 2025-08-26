@@ -35,16 +35,14 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'Users', 'url' => ['/user/index']],
+        ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
+        ['label' => Yii::t('app', 'Users'), 'url' => ['/user/index']],
         ['label' => Yii::t("app", "Calls"), 'url' => ['/call/index', "CallSearch" => ["created_at" => Yii::$app->formatter->asDate("now", "php:Y-m-d") ." - " .  Yii::$app->formatter->asDate("now+1day", "php:Y-m-d")]]],
-        ['label' => 'Lines', 'url' => ['/line/index']],
-        ['label' => 'Lines Tariffs', 'url' => ['/line-tariff/index']],
-        ['label' => 'Calls Tariffs', 'url' => ['/call-tariff/index']],
+        ['label' => Yii::t('app', 'Live calls'), 'url' => ['/call/live']],
+        ['label' => Yii::t('app', 'Lines'), 'url' => ['/line/index']],
+        ['label' => Yii::t('app', 'Line tariffs'), 'url' => ['/line-tariff/index']],
+        ['label' => Yii::t('app', 'Call tariffs'), 'url' => ['/call-tariff/index']],
     ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    }     
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
         'items' => $menuItems,

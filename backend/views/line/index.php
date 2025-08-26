@@ -1,6 +1,7 @@
 <?php
 
 use common\models\Line;
+use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -9,6 +10,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var backend\models\search\LineSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/* @var $events \PAMI\Message\Event\EventMessage[] */
 
 $this->title = Yii::t('app', 'Lines');
 $this->params['breadcrumbs'][] = $this->title;
@@ -28,7 +30,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'name',
+            [
+                'attribute' => 'name',
+                'value' => function ($data) use ($events) {
+                    $icon = FAS::i(FAS::_CIRCLE, [
+                        "class" => $data->getConnectionInfo($events) ? "text-success" : "text-danger",
+                    ]);
+                    $href = Html::a($data->name, ["line/view", "id" => $data->id]);
+                    return "$icon " . $href;
+                },
+                "format" => "raw",
+            ],
             'description',
             'sip_num',
             'did_number',

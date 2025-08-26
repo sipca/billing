@@ -2,11 +2,14 @@
 
 namespace common\models;
 
+use common\components\ami\events\ContactListEvent;
 use common\enums\LineTariffEnum;
 use common\enums\TransactionStatusEnum;
 use common\enums\TransactionTypeEnum;
+use common\models\ami\ContactInfo;
 use DateTime;
 use IntlDateFormatter;
+use PAMI\Message\Response\ResponseMessage;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -34,6 +37,7 @@ use yii\behaviors\TimestampBehavior;
 class Line extends \yii\db\ActiveRecord
 {
     public $_tariffs;
+    public $_connectionInfo;
 
     /**
      * {@inheritdoc}
@@ -184,6 +188,34 @@ class Line extends \yii\db\ActiveRecord
                 $model->save();
             }
         }
+    }
+
+    public function getConnectionInfo(array $events = []) : ContactInfo|false
+    {
+        if($this->_connectionInfo) {
+            return $this->_connectionInfo;
+        }
+
+        if(!$events) {
+            return false;
+        }
+
+        foreach ($events as $event) {
+            if(!$event instanceof ContactListEvent) continue;
+
+            if($event->getEndpoint() == $this->sip_num) {
+                $this->_connectionInfo = new ContactInfo([
+                    "uri" => $event->getUri(),
+                    "endpoint" => $event->getEndpoint(),
+                    "status" => $event->getStatus(),
+                    "viaaddr" => $event->getViaaddr(),
+                    "isReachable" => $event->isReachable(),
+                ]);
+                return $this->_connectionInfo;
+            }
+        }
+
+        return false;
     }
 
 }

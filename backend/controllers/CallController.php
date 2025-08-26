@@ -3,6 +3,7 @@
 namespace backend\controllers;
 ini_set("memory_limit", "-1");
 
+use common\models\ami\LiveCalls;
 use common\models\Call;
 use backend\models\search\CallSearch;
 use Yii;
@@ -71,6 +72,16 @@ class CallController extends Controller
             'totalSum' => $totalSum,
             'totalProfit' => $totalProfit,
             'totalSec' => $totalSec,
+        ]);
+    }
+
+    public function actionLive()
+    {
+        $liveCalls = new LiveCalls();
+        $dataProvider = $liveCalls->search();
+
+        return $this->render('live', [
+            'dataProvider' => $dataProvider
         ]);
     }
 

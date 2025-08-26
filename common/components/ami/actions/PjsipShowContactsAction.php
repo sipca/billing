@@ -1,6 +1,6 @@
 <?php
 
-namespace common\components;
+namespace common\components\ami\actions;
 
 use PAMI\Message\Action\ActionMessage;
 

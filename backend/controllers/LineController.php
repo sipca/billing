@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\ami\actions\PjsipShowContactsAction;
 use common\models\Line;
 use backend\models\search\LineSearch;
 use Yii;
@@ -54,9 +55,16 @@ class LineController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->sort->defaultOrder = ['sip_num' => SORT_ASC];
 
+        $client = \Yii::$app->ami;
+        $client->open();
+
+        $response = $client->send(new PjsipShowContactsAction());
+        $events = $response->getEvents();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'events' => $events,
         ]);
     }
 
@@ -68,8 +76,15 @@ class LineController extends Controller
      */
     public function actionView($id)
     {
+        $client = \Yii::$app->ami;
+        $client->open();
+
+        $response = $client->send(new PjsipShowContactsAction());
+        $events = $response->getEvents();
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'events' => $events,
         ]);
     }
 
