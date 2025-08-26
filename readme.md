@@ -23,8 +23,8 @@ Follow these steps to get SIPCA up and running:
 
 ### 1. Clone the project
 ```bash
-git clone https://github.com/sipca/sip-billing
-cd sip-billing
+git clone https://github.com/sipca/billing
+cd billing
 ````
 
 ### 2. Configure environment variables
