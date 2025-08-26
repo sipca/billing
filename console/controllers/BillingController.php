@@ -129,32 +129,49 @@ class BillingController extends Controller
     {
         $formatter = Yii::$app->formatter;
 
-        $total_duration_name = round($totals["duration"] / 60, 2) . " min";
-        $total_answered_10_duration_name = round($totals["answered_10_duration"] / 60, 2) . " min";
+        $total_duration_name = $this->secondsToMinutesAndSeconds($totals['duration']) . " min";
+        $total_answered_10_duration_name = $this->secondsToMinutesAndSeconds($totals["answered_10_duration"]) . " min";
+        $answered_percent = round($totals["answered"] / 100 * $totals["calls"], 2);
+        $answered_10_percent = round($totals["answered_10"] / 100 * $totals["calls"], 2);
 
         $text = "👤 <b>{$user->username}</b>" . PHP_EOL . PHP_EOL;
         $text .= "🗓️ " . $formatter->asDate('now') . PHP_EOL . PHP_EOL;
         $text .= "——— <i>Summary</i> ———" . PHP_EOL;
         $text .= "☎️ Total calls: {$totals["calls"]} ($total_duration_name)" . PHP_EOL;
-        $text .= "🟢 Answered: {$totals["answered"]}" . PHP_EOL;
-        $text .= "🟡 Answered >10sec: {$totals["answered_10"]} ($total_answered_10_duration_name)" . PHP_EOL;
+        $text .= "🟢 Answered: {$totals["answered"]} ($answered_percent%)" . PHP_EOL;
+        $text .= "🟡 Answered >10sec: {$totals["answered_10"]} ($total_answered_10_duration_name, $answered_10_percent%)" . PHP_EOL;
         $text .= "💸 <b>Spent: " . $formatter->asCurrency($totals["spent"]) . "</b>" . PHP_EOL . PHP_EOL;
 
         $text .= "——— <i>Lines</i> ———" . PHP_EOL;
 
         foreach ($lines as $line) {
-            $line_duration = round(($line["total_in_calls_duration"] + $line["total_out_calls_duration"]) / 60, 2) . " min";
-            $line_answered_10_duration = round(($line["total_in_calls_answered_10_duration"] + $line["total_out_calls_answered_10_duration"]) / 60, 2) . " min";
+            $line_duration = $this->secondsToMinutesAndSeconds(($line["total_in_calls_duration"] + $line["total_out_calls_duration"])) . " min";
+            $line_answered_10_duration = $this->secondsToMinutesAndSeconds(($line["total_in_calls_answered_10_duration"] + $line["total_out_calls_answered_10_duration"])) . " min";
+
+            $total_calls = $line["total_in_calls_count"] + $line["total_out_calls_count"];
+            $answered_count = $line["total_in_calls_answered"] + $line["total_out_calls_answered"];
+            $answered_10_count = $line["total_in_calls_answered_10"] + $line["total_out_calls_answered_10"];
+            $answered_percent = round($answered_count / 100 * $total_calls, 2);
+            $answered_10_percent = round($answered_10_count / 100 * $total_calls, 2);
 
             $text .= "┊┄ {$line["name"]}" . PHP_EOL;
-            $text .= "┊☎️ Total calls: " . ($line["total_in_calls_count"] + $line["total_out_calls_count"]) . " ($line_duration)" . PHP_EOL;
-            $text .= "┊🟢 Answered: " . ($line["total_in_calls_answered"] + $line["total_out_calls_answered"]) . PHP_EOL;
-            $text .= "┊🟡 Answered >10sec: " . ($line["total_in_calls_answered_10"] + $line["total_out_calls_answered_10"]) . " ($line_answered_10_duration)" . PHP_EOL;
+            $text .= "┊☎️ Total calls: " . $total_calls . " ($line_duration)" . PHP_EOL;
+            $text .= "┊🟢 Answered: " . $answered_count . " ($answered_percent%)" . PHP_EOL;
+            $text .= "┊🟡 Answered >10sec: " . $answered_10_count . " ($line_answered_10_duration, $answered_10_percent%)" . PHP_EOL;
             $text .= "┊💸 <b>Spent: " . $formatter->asCurrency($line["total_spent"]) . "</b>" . PHP_EOL;
             $text .= "┊" . PHP_EOL;
         }
 
         return $text;
+    }
+
+
+    private function secondsToMinutesAndSeconds(int $seconds): string
+    {
+        $minutes = intdiv($seconds, 60);     // минуты
+        $remainingSeconds = $seconds % 60;   // остаток секунд
+
+        return $minutes . ":" . $remainingSeconds;
     }
 
 }
