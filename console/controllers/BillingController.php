@@ -131,8 +131,8 @@ class BillingController extends Controller
 
         $total_duration_name = $this->secondsToMinutesAndSeconds($totals['duration']) . " min";
         $total_answered_10_duration_name = $this->secondsToMinutesAndSeconds($totals["answered_10_duration"]) . " min";
-        $answered_percent = round($totals["answered"] / 100 * $totals["calls"], 2);
-        $answered_10_percent = round($totals["answered_10"] / 100 * $totals["calls"], 2);
+        $answered_percent = round($totals["answered"] * 100 / $totals["calls"], 2);
+        $answered_10_percent = round($totals["answered_10"] * 100 / $totals["calls"], 2);
 
         $text = "👤 <b>{$user->username}</b>" . PHP_EOL . PHP_EOL;
         $text .= "🗓️ " . $formatter->asDate('now') . PHP_EOL . PHP_EOL;
@@ -151,8 +151,8 @@ class BillingController extends Controller
             $total_calls = $line["total_in_calls_count"] + $line["total_out_calls_count"];
             $answered_count = $line["total_in_calls_answered"] + $line["total_out_calls_answered"];
             $answered_10_count = $line["total_in_calls_answered_10"] + $line["total_out_calls_answered_10"];
-            $answered_percent = round($answered_count / 100 * $total_calls, 2);
-            $answered_10_percent = round($answered_10_count / 100 * $total_calls, 2);
+            $answered_percent = round($answered_count * 100 / $total_calls, 2);
+            $answered_10_percent = round($answered_10_count * 100 / $total_calls, 2);
 
             $text .= "┊┄ {$line["name"]}" . PHP_EOL;
             $text .= "┊☎️ Total calls: " . $total_calls . " ($line_duration)" . PHP_EOL;
