@@ -5,6 +5,7 @@ namespace console\controllers;
 use common\enums\LineTariffEnum;
 use common\models\Line;
 use common\models\User;
+use Longman\TelegramBot\Request;
 use SebastianBergmann\CodeCoverage\Report\PHP;
 use Yii;
 use yii\console\Controller;
@@ -79,17 +80,18 @@ class BillingController extends Controller
         }
     }
 
-    public function actionDayNotifier()
+    public function actionDayNotifier($for_admin = false)
     {
-        $users = User::find()
-            ->where(["is not", "telegram_chat_id", null])
-            ->all();
+        if($for_admin) {
+            $users = User::find()
+                ->all();
+        } else {
+            $users = User::find()
+                ->where(["is not", "telegram_chat_id", null])
+                ->all();
+        }
 
         foreach ($users as $user) {
-            if (!$user->telegram_chat_id) {
-                continue;
-            }
-
             $data = $user->summaryByPeriod(
                 Yii::$app->formatter->asTimestamp("now 00:00:00"),
                 Yii::$app->formatter->asTimestamp("now 00:00:00 +1day")
@@ -121,7 +123,15 @@ class BillingController extends Controller
             // === Формируем текст ===
             $text = $this->buildSummaryText($user, $totals, $data["byLines"]);
 
-            $user->sendMessageInTelegram($text);
+            if($for_admin) {
+                Request::sendMessage([
+                    "chat_id" => env('TELEGRAM_ADMIN_CHAT_ID'),
+                    "text" => $text,
+                    "parse_mode" => "HTML"
+                ]);
+            } else {
+                $user->sendMessageInTelegram($text);
+            }
         }
     }
 
