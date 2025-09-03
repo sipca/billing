@@ -27,7 +27,7 @@ class LiveCalls extends Model
         $models = $this->normalizeCalls($_models);
 
         foreach ($models as &$model) {
-            $line = Line::findOne(["or", ["sip_num" => $model["from"]], ["sip_num" => $model["to"]]]);
+            $line = Line::find()->where(["or", ["sip_num" => $model["from"]], ["sip_num" => $model["to"]]])->one();
             $model["line"] = $line?->name;
         }
 
