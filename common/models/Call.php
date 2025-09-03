@@ -179,7 +179,7 @@ class Call extends \yii\db\ActiveRecord
   <source src="data:audio/wav;base64,'.$base64.'" type="audio/wav">
   Your browser does not support the audio tag.
 </audio>
-<a href="/call/download-audio?record='.$src.'&name='.$this->call_id.'.wav" target="_blank"><i class="fas fa-download"></i></a>
+<a href="/call/download-audio?call_id='.$this->call_id.'&name='.$this->call_id.'.wav" target="_blank"><i class="fas fa-download"></i></a>
 ';
         } else {
             $audio = '';

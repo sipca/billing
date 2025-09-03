@@ -136,12 +136,13 @@ class CallController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionDownloadAudio($record, $name = null)
+    public function actionDownloadAudio($call_id, $name = null)
     {
+        $call = Call::findOne(["call_id" => $call_id]);
         if(!$name) {
             $name = Yii::$app->security->generateRandomString();
         }
-        return Yii::$app->response->sendFile($record, $name);
+        return Yii::$app->response->sendFile($call->getRecordPath(), $name);
     }
 
     public function actionDialer()
