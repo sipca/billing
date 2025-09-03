@@ -54,6 +54,13 @@ return [
             ],
         ],
     ],
+    'container' => [
+        'definitions' => [
+            'yii\widgets\LinkPager' => [
+                'class' => \yii\bootstrap5\LinkPager::class
+            ]
+        ]
+    ],
 
     'params' => $params,
 ];
