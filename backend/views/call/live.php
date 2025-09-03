@@ -18,6 +18,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= \kartik\grid\GridView::widget([
         'dataProvider' => $dataProvider,
+        'columns' => [
+            'line',
+            'from',
+            'to',
+            'duration'
+        ]
     ]); ?>
 
 
