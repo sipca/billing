@@ -34,7 +34,7 @@ class ApiController extends Controller
         return "OK";
     }
 
-    public function actionCallStart($caller, $number, $trunk, $channel, $direction)
+    public function actionCallStart()
     {
         Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::debug(Yii::$app->request->queryParams);
@@ -42,7 +42,7 @@ class ApiController extends Controller
         return 555;
     }
 
-    public function actionCallEnd($call_id, $caller, $number, $trunk, $channel, $direction, $answered, $status, $recording)
+    public function actionCallEnd()
     {
         Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::debug(Yii::$app->request->queryParams);
