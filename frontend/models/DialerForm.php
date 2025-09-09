@@ -59,6 +59,7 @@ class DialerForm extends Model
             } else {
                 $phone = $name = $line;
             }
+            print_r($phone);
 
             $originate = new OriginateAction("$driver/$dialer_trunk/$phone");
             $originate->setContext($dialer_context);
