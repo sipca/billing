@@ -51,7 +51,7 @@ class DialerForm extends Model
             }
             $extString .= $driver."/" .$line->sip_num;
         }
-        print_r($extString.PHP_EOL);
+//        print_r($extString.PHP_EOL);
 
         foreach ($numbers as $line) {
             $explode = explode(',', $line);
@@ -63,7 +63,7 @@ class DialerForm extends Model
 
             $channel = "$driver/$phone@$dialer_trunk";
 
-            print_r($channel . PHP_EOL);
+//            print_r($channel . PHP_EOL);
 
             $originate = new OriginateAction($channel);
             $originate->setContext($dialer_context);
