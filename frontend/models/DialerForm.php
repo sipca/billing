@@ -61,7 +61,7 @@ class DialerForm extends Model
                 $phone = $name = trim($line);
             }
 
-            $channel = "$driver/$dialer_trunk/$phone";
+            $channel = "$driver/$phone@$dialer_trunk";
 
             print_r($channel . PHP_EOL);
 
