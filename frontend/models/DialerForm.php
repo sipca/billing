@@ -60,7 +60,11 @@ class DialerForm extends Model
                 $phone = $name = $line;
             }
 
-            $originate = new OriginateAction("$driver/$dialer_trunk/$phone");
+            $channel = "$driver/$dialer_trunk/$phone";
+
+            print_r($channel . PHP_EOL);
+
+            $originate = new OriginateAction($channel);
             $originate->setContext($dialer_context);
             $originate->setExtension($phone);
             $originate->setPriority(1);
