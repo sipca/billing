@@ -4,6 +4,8 @@ namespace common\models;
 
 use common\enums\CallStatusEnum;
 use common\enums\CallTariffTypeEnum;
+use common\enums\TransactionStatusEnum;
+use common\enums\TransactionTypeEnum;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -186,5 +188,24 @@ class Call extends \yii\db\ActiveRecord
         }
 
         return $audio;
+    }
+
+    public function charge() : void
+    {
+        $string = "Automatic charge";
+
+        if(!$this?->line?->users) return;
+
+        foreach ($this->line->users as $user) {
+            $user = $user->id;
+            break;
+        }
+
+        if(isset($user)) {
+            $sum = round($this->getSum());
+            if($sum > 0) {
+                Transaction::create($user, TransactionTypeEnum::AUTOMATIC, -$sum, $string . " " . $this->call_id, TransactionStatusEnum::PAID);
+            }
+        }
     }
 }

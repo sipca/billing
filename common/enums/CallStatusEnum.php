@@ -10,6 +10,7 @@ enum CallStatusEnum: int
     case ANSWERED = 1;
     case NO_ANSWER = 2;
     case BUSY = 3;
+    case IN_PROGRESS = 10;
 
     public static function mapFromCdr(string $status) : self
     {
