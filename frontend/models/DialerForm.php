@@ -51,13 +51,14 @@ class DialerForm extends Model
             }
             $extString .= $driver."/" .$line->sip_num;
         }
+        print_r($extString.PHP_EOL);
 
         foreach ($numbers as $line) {
             $explode = explode(',', $line);
             if(count($explode) >= 2) {
                 [$phone, $name] = array_map('trim', explode(',', $line));
             } else {
-                $phone = $name = $line;
+                $phone = $name = trim($line);
             }
 
             $channel = "$driver/$dialer_trunk/$phone";
