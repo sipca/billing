@@ -53,7 +53,12 @@ class DialerForm extends Model
         }
 
         foreach ($numbers as $line) {
-            [$phone, $name] = array_map('trim', explode(',', $line));
+            $explode = explode(',', $line);
+            if(count($explode) >= 2) {
+                [$phone, $name] = array_map('trim', explode(',', $line));
+            } else {
+                $phone = $name = $line;
+            }
 
             $originate = new OriginateAction("$driver/$dialer_trunk/$phone");
             $originate->setContext($dialer_context);
