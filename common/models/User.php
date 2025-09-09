@@ -19,6 +19,7 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $email
  * @property int|null $balance
+ * @property int|null $credit_balance
  * @property int $status
  * @property int $role
  * @property int $created_at
@@ -79,7 +80,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
-            [["_lines"], "safe"]
+            [["_lines", "credit_balance"], "safe"]
         ];
     }
 
@@ -288,6 +289,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function canCall() : bool
     {
-        return $this->balance > 0;
+        if($this->credit_balance == 0) {
+            return true;
+        }
+        return $this->balance + (int) $this->credit_balance > 0;
     }
 }

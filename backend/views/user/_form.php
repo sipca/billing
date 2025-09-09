@@ -22,6 +22,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'status')->dropDownList(\common\models\User::STATUSES) ?>
+    <?= $form->field($model, 'credit_balance')->widget(\common\widgets\MoneyControl::class) ?>
 
     <?= $form->field($model, 'role')->dropDownList(\common\models\User::ROLES) ?>
     <?= $form->field($model, 'telegram_chat_id')->textInput() ?>

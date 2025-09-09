@@ -46,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'format' => 'html',
             ],
+            'credit_balance:currency',
             'telegram_chat_id',
             'status',
             'role',

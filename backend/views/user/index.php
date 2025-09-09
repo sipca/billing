@@ -45,6 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'format' => 'html',
             ],
+            'credit_balance:currency',
             'status',
             'role',
             'created_at:datetime',

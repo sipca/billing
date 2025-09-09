@@ -85,6 +85,7 @@ class UserController extends Controller
                 $model->access_token = Yii::$app->security->generateRandomString();
                 $model->auth_key = Yii::$app->security->generateRandomString();
                 $model->password_hash = Yii::$app->security->generatePasswordHash($model->password);
+                $model->credit_balance = (int) $model->credit_balance * 100;
 
                 if($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
@@ -111,8 +112,12 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->credit_balance /= 100;
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->credit_balance *= 100;
+
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
