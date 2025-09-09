@@ -9,10 +9,16 @@ use yii\web\Response;
 
 class ApiController extends Controller
 {
+    public function beforeAction($action)
+    {
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        return parent::beforeAction($action);
+    }
+
     public function actionCanCall($caller, $number)
     {
         $line = Line::findOne(["sip_num" => $caller]);
-        Yii::$app->response->format = Response::FORMAT_RAW;
+        
         if($line) {
             $users = $line->users;
             if($users) {
@@ -24,6 +30,20 @@ class ApiController extends Controller
                 return "DENY";
             }
         }
+        return "OK";
+    }
+
+    public function actionCallStart($caller, $number, $trunk, $channel, $direction)
+    {
+        Yii::debug(Yii::$app->request->queryParams);
+        
+        return 555;
+    }
+
+    public function actionCallEnd($call_id, $caller, $number, $trunk, $channel, $direction, $answered, $status, $recording)
+    {
+        Yii::debug(Yii::$app->request->queryParams);
+
         return "OK";
     }
 }
