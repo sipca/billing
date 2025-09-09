@@ -162,6 +162,9 @@ class Call extends \yii\db\ActiveRecord
 
     public function getRecordPath() : string
     {
+        if(str_contains($this->record_link, "/var/spool/asterisk")) {
+            return str_replace("/var/spool/asterisk", "", $this->record_link);
+        }
         $y = Yii::$app->formatter->asDate($this->created_at, 'php:Y');
         $m = Yii::$app->formatter->asDate($this->created_at, 'php:m');
         $d = Yii::$app->formatter->asDate($this->created_at, 'php:d');
