@@ -17,6 +17,7 @@ class ApiController extends Controller
 
     public function actionCanCall($caller, $number)
     {
+        Yii::$app->response->format = Response::FORMAT_RAW;
         $line = Line::findOne(["sip_num" => $caller]);
         
         if($line) {
@@ -35,6 +36,7 @@ class ApiController extends Controller
 
     public function actionCallStart($caller, $number, $trunk, $channel, $direction)
     {
+        Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::debug(Yii::$app->request->queryParams);
         
         return 555;
@@ -42,6 +44,7 @@ class ApiController extends Controller
 
     public function actionCallEnd($call_id, $caller, $number, $trunk, $channel, $direction, $answered, $status, $recording)
     {
+        Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::debug(Yii::$app->request->queryParams);
 
         return "OK";
