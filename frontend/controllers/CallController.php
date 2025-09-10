@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 ini_set("memory_limit", "-1");
 
+use common\models\ami\LiveCalls;
 use common\models\Call;
 use frontend\models\DialerForm;
 use frontend\models\search\CallSearch;
@@ -155,6 +156,16 @@ class CallController extends Controller
         }
 
         return $this->render('dialer', compact('model'));
+    }
+
+    public function actionLive()
+    {
+        $liveCalls = new LiveCalls();
+        $dataProvider = $liveCalls->search();
+
+        return $this->render('live', [
+            'dataProvider' => $dataProvider
+        ]);
     }
 
     /**
