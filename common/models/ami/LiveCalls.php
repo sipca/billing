@@ -25,6 +25,7 @@ class LiveCalls extends Model
         }
 
         $models = $this->normalizeCalls($_models);
+        unset($_models);
 
         foreach ($models as &$model) {
             $line = Line::find()
@@ -38,19 +39,22 @@ class LiveCalls extends Model
                             $model["line"] = $line?->name;
                         }
                     }
-                    if(!isset($model["line"])) {
-                        unset($model);
-                    }
                 }
             }
+        }
+        $_models = $models;
 
-            if($user_id && !$line) {
-                unset($model);
+        if($user_id) {
+            unset($model, $_models);
+            foreach ($models as $model) {
+                if(isset($model["line"]) && $model["line"]) {
+                    $_models[] = $model;
+                }
             }
         }
 
         $dataProvider = new ArrayDataProvider([
-            "allModels" => $models
+            "allModels" => $_models
         ]);
         return $dataProvider;
     }
