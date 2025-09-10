@@ -38,7 +38,7 @@ class LiveCalls extends Model
                             $model["line"] = $line?->name;
                         }
                     }
-                    if(!$model["line"]) {
+                    if(!isset($model["line"])) {
                         unset($model);
                     }
                 }
