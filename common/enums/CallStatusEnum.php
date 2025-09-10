@@ -18,6 +18,7 @@ enum CallStatusEnum: int
             "ANSWERED" => self::ANSWERED,
             "BUSY" => self::BUSY,
             "NO ANSWER" => self::NO_ANSWER,
+            "NO_ANSWER" => self::NO_ANSWER,
             default => self::FAILED,
         };
     }
