@@ -10,7 +10,7 @@ use yii\data\ArrayDataProvider;
 
 class LiveCalls extends Model
 {
-    public function search()
+    public function search($user_id = null)
     {
         $client = \Yii::$app->ami;
         $client->open();
@@ -27,13 +27,21 @@ class LiveCalls extends Model
         $models = $this->normalizeCalls($_models);
 
         foreach ($models as &$model) {
-            $line = Line::find()->where(["or", ["sip_num" => $model["from"]], ["sip_num" => $model["to"]]])->one();
-            $model["line"] = $line?->name;
-        }
+            $line = Line::find()
+                ->where(["or", ["sip_num" => $model["from"]], ["sip_num" => $model["to"]]]);
 
-//        foreach ($_models as $model) {
-//            $model[]
-//        }
+            if($user_id) {
+                $line->joinWith('users')->andWhere(["line_to_user.user_id" => $user_id]);
+            }
+
+            $line = $line->one();
+
+            if($line) {
+                $model["line"] = $line?->name;
+            } else if($user_id) {
+                unset($model);
+            }
+        }
 
         $dataProvider = new ArrayDataProvider([
             "allModels" => $models
