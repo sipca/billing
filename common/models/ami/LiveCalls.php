@@ -28,17 +28,23 @@ class LiveCalls extends Model
 
         foreach ($models as &$model) {
             $line = Line::find()
-                ->where(["or", ["sip_num" => $model["from"]], ["sip_num" => $model["to"]]]);
-
-            if($user_id) {
-                $line->joinWith('users')->andWhere(["line_to_user.user_id" => $user_id]);
-            }
-
-            $line = $line->one();
+                ->where(["or", ["sip_num" => $model["from"]], ["sip_num" => $model["to"]]])
+                ->one();
 
             if($line) {
-                $model["line"] = $line?->name;
-            } else if($user_id) {
+                if($user_id) {
+                    foreach ($line->users as $user) {
+                        if($user->id == $user_id) {
+                            $model["line"] = $line?->name;
+                        }
+                    }
+                    if(!$model["line"]) {
+                        unset($model);
+                    }
+                }
+            }
+
+            if($user_id && !$line) {
                 unset($model);
             }
         }
