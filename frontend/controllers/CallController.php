@@ -161,7 +161,7 @@ class CallController extends Controller
     public function actionLive()
     {
         $liveCalls = new LiveCalls();
-        $dataProvider = $liveCalls->search();
+        $dataProvider = $liveCalls->search(Yii::$app->user->identity->id);
 
         return $this->render('live', [
             'dataProvider' => $dataProvider
