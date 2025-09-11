@@ -169,15 +169,19 @@ class Call extends \yii\db\ActiveRecord
 
     public function getRecordPath() : string
     {
-        $link = str_replace(" ", "+", $this->record_link);
-        if($this->record_link && str_contains($link, "/var/spool/asterisk")) {
-            return str_replace("/var/spool/asterisk", "", $link);
-        }
-        $y = Yii::$app->formatter->asDate($this->created_at, 'php:Y');
-        $m = Yii::$app->formatter->asDate($this->created_at, 'php:m');
-        $d = Yii::$app->formatter->asDate($this->created_at, 'php:d');
+        if($this->record_link) {
+            $link = str_replace(" ", "+", $this->record_link);
+            if(str_contains($link, "/var/spool/asterisk")) {
+                return str_replace("/var/spool/asterisk", "", $link);
+            }
 
-        return "/monitor/$y/$m/$d/$link";
+            $y = Yii::$app->formatter->asDate($this->created_at, 'php:Y');
+            $m = Yii::$app->formatter->asDate($this->created_at, 'php:m');
+            $d = Yii::$app->formatter->asDate($this->created_at, 'php:d');
+
+            return "/monitor/$y/$m/$d/$link";
+        }
+        return '';
     }
 
     public function getRealBillingDuration()
