@@ -43,9 +43,9 @@ class DialerForm extends Model
         $client = new ClientImpl($options);
         $client->open();
 
-        $numbers1 = $this->parseFile();
-        $numbers2 = []; //$this->parseNumbers();
-        $numbers = array_merge($numbers1, $numbers2);
+        $numbers = $this->parseFile();
+//        $numbers2 = []; //$this->parseNumbers();
+//        $numbers = array_merge($numbers1, $numbers2);
 
         $extString = $extOnlyNumString = "";
         $lines = Line::find()

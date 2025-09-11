@@ -157,7 +157,7 @@ class CallController extends Controller
 
             $model->save();
 
-            $model->dial();
+//            $model->dial();
             Yii::$app->session->setFlash("success", "Dialed!");
         }
 
