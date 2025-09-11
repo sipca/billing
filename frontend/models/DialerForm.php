@@ -65,6 +65,13 @@ class DialerForm extends Model
 
         foreach ($numbers as $phone => $name) {
 
+            $model = new ClientNumber([
+                "number" => (string) $phone,
+                "name" => $name,
+            ]);
+            $model->save();
+
+
             $channel = "$driver/$phone@$dialer_trunk";
 
             $originate = new OriginateAction($channel);
