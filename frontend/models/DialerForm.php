@@ -111,7 +111,7 @@ class DialerForm extends Model
             }
 
             $name  = trim((string)$row['A']); // столбец A — Имя
-            $phone = preg_replace('/\D+/', '', $row['B']); // столбец B — Телефон (оставляем только цифры)
+            $phone = preg_replace('/\D+/', '', (string)$row['B']); // столбец B — Телефон (оставляем только цифры)
 
             if (!empty($name) && !empty($phone)) {
                 $result[$phone] = $name;
