@@ -67,7 +67,7 @@ class DialerForm extends Model
 
             $originate = new OriginateAction($channel);
             $originate->setContext($dialer_context);
-            $originate->setExtension($extString);
+            $originate->setExtension('s');
             $originate->setCallerId($dialer_trunk);
             $originate->setPriority(1);
             $originate->setAsync(true);
