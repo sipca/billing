@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use common\enums\LineTariffEnum;
+use common\models\Call;
 use common\models\Line;
 use common\models\User;
 use Longman\TelegramBot\Request;
@@ -182,6 +183,14 @@ class BillingController extends Controller
         $remainingSeconds = $seconds % 60;   // остаток секунд
 
         return $minutes . ":" . $remainingSeconds;
+    }
+
+    public function actionHotFix()
+    {
+        $calls = Call::find()
+            ->where(["line_id" => null, "direction" => "out"])
+            ->all();
+
     }
 
 }

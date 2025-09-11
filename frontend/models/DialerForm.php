@@ -30,6 +30,7 @@ class DialerForm extends Model
         $dialer_trunk = env('DIALER_TRUNK');
         $dialer_context = env('DIALER_CONTEXT');
         $driver = env("AST_DRIVER", "PJSIP");
+        $dialer_tariff_id = env("DIALER_TARIFF_ID");
 
         $options = [
             'host' => env("AMI_HOST"),
@@ -71,7 +72,6 @@ class DialerForm extends Model
             ]);
             $model->save();
 
-
             $channel = "$driver/$phone@$dialer_trunk";
 
             $originate = new OriginateAction($channel);
@@ -84,8 +84,7 @@ class DialerForm extends Model
             $originate->setVariable('CLIENT_NAME', $name);
             $originate->setVariable('CALLER_ID_NUMBER', $phone);
             $originate->setVariable('OPERATORS', $extString);
-
-//            \Yii::debug($originate->serialize());
+            $originate->setVariable('TARIFF_ID', $dialer_tariff_id);
 
             $client->send($originate);
             usleep(500000);

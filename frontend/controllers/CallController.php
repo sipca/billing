@@ -155,8 +155,6 @@ class CallController extends Controller
         if($model->load($this->request->post()) && $model->validate()) {
             $model->file = UploadedFile::getInstance($model, 'file');
 
-//            $model->save();
-
             $model->dial();
             Yii::$app->session->setFlash("success", "Dialed!");
         }
