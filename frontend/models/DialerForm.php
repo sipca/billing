@@ -67,15 +67,14 @@ class DialerForm extends Model
 
             $originate = new OriginateAction($channel);
             $originate->setContext($dialer_context);
-            $originate->setExtension(100);
+            $originate->setExtension($extString);
             $originate->setCallerId($dialer_trunk);
             $originate->setPriority(1);
             $originate->setAsync(true);
             $originate->setTimeout(20000);
             $originate->setVariable('CLIENT_NAME', $name);
             $originate->setVariable('CALLER_ID_NUMBER', $phone);
-            $originate->setVariable('CALLER_ID_CDR', "100 <100>");
-            $originate->setVariable('INTERNAL_EXT', 100);
+            $originate->setVariable('INTERNAL_EXT', $extString);
 
             \Yii::debug($originate->serialize());
 
