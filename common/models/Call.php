@@ -111,7 +111,7 @@ class Call extends \yii\db\ActiveRecord
             $this->assignTariff();
         }
 
-        if($this->status === CallStatusEnum::ANSWERED->value && $this?->line?->tolerance_billing_duration) {
+        if($this->billing_duration > 0 && $this?->line?->tolerance_billing_duration) {
             $this->billing_duration += $this?->line?->tolerance_billing_duration;
         }
         return parent::beforeSave($insert);
