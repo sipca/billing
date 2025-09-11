@@ -62,7 +62,7 @@ class CallController extends Controller
         $totalSum = $totalProfit = $totalSec = 0;
         foreach ($dataProvider->query->all() as $model) {
             $totalSum += $model->sum;
-            $totalSec += $model->billing_duration;
+            $totalSec += $model->getRealBillingDuration();
             $totalProfit += $model->getSum() - $model->getSumSupplier();
         }
 

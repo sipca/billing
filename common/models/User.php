@@ -258,26 +258,26 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
         if ($call->direction === Call::DIRECTION_IN) {
             $row["total_in_calls_count"]++;
-            $row["total_in_calls_duration"] += $call->billing_duration;
+            $row["total_in_calls_duration"] += $call->getRealBillingDuration();
             $row["total_in_spent"] += $call->getSum();
 
             if ($call->status === CallStatusEnum::ANSWERED->value) {
                 $row["total_in_calls_answered"]++;
-                if ($call->billing_duration >= 10) {
+                if ($call->getRealBillingDuration() >= 10) {
                     $row["total_in_calls_answered_10"]++;
-                    $row["total_in_calls_answered_10_duration"] += $call->billing_duration;
+                    $row["total_in_calls_answered_10_duration"] += $call->getRealBillingDuration();
                 }
             }
         } elseif ($call->direction === Call::DIRECTION_OUT) {
             $row["total_out_calls_count"]++;
-            $row["total_out_calls_duration"] += $call->billing_duration;
+            $row["total_out_calls_duration"] += $call->getRealBillingDuration();
             $row["total_out_spent"] += $call->getSum();
 
             if ($call->status === CallStatusEnum::ANSWERED->value) {
                 $row["total_out_calls_answered"]++;
-                if ($call->billing_duration >= 10) {
+                if ($call->getRealBillingDuration() >= 10) {
                     $row["total_out_calls_answered_10"]++;
-                    $row["total_out_calls_answered_10_duration"] += $call->billing_duration;
+                    $row["total_out_calls_answered_10_duration"] += $call->getRealBillingDuration();
                 }
             }
         }

@@ -74,7 +74,7 @@ $this->title = Yii::t("app", "Home");
                             [
                                 "attribute" => "billing_duration",
                                 "value" => function(\common\models\Call $model) {
-                                    return Yii::$app->formatter->asDuration((int) $model->billing_duration) . " (" . Yii::$app->formatter->asCurrency($model->getSum()) .")";
+                                    return Yii::$app->formatter->asDuration((int) $model->getRealBillingDuration()) . " (" . Yii::$app->formatter->asCurrency($model->getSum()) .")";
                                 }
                             ],
                             [

@@ -34,6 +34,8 @@ class Call extends \yii\db\ActiveRecord
     const string DIRECTION_IN = 'in';
     const string DIRECTION_OUT = 'out';
 
+    private $_real_billing_duration;
+
     /**
      * {@inheritdoc}
      */
@@ -133,13 +135,13 @@ class Call extends \yii\db\ActiveRecord
             if($this->direction === self::DIRECTION_OUT) {
                 $conn_price = $this->status === CallStatusEnum::ANSWERED->value ? $this->tariff->price_connection_out : 0;
                 return match ($this->tariff->type) {
-                    CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->price_out * (ceil($this->billing_duration / 60)), 2),
-                    default => round($conn_price + $this->tariff->price_out * ($this->billing_duration / 60), 2),
+                    CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->price_out * (ceil($this->getRealBillingDuration() / 60)), 2),
+                    default => round($conn_price + $this->tariff->price_out * ($this->getRealBillingDuration() / 60), 2),
                 };
             }
             return match ($this->tariff->type) {
-                CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->price_in * (ceil($this->billing_duration / 60)), 2),
-                default => round($conn_price + $this->tariff->price_in * ($this->billing_duration / 60), 2),
+                CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->price_in * (ceil($this->getRealBillingDuration() / 60)), 2),
+                default => round($conn_price + $this->tariff->price_in * ($this->getRealBillingDuration() / 60), 2),
             };
         }
         return 0;
@@ -153,13 +155,13 @@ class Call extends \yii\db\ActiveRecord
                 $conn_price = $this->status === CallStatusEnum::ANSWERED->value ? $this->tariff->supplier_connection_price_out : 0;
 
                 return match ($this->tariff->supplier_type) {
-                    CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->supplier_price_out * (ceil($this->billing_duration / 60)), 2),
-                    default => round($conn_price + $this->tariff->supplier_price_out * ($this->billing_duration / 60), 2),
+                    CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->supplier_price_out * (ceil($this->getRealBillingDuration() / 60)), 2),
+                    default => round($conn_price + $this->tariff->supplier_price_out * ($this->getRealBillingDuration() / 60), 2),
                 };
             }
             return match ($this->tariff->supplier_type) {
-                CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->supplier_price_in * (ceil($this->billing_duration / 60)), 2),
-                default => round($conn_price + $this->tariff->supplier_price_in * ($this->billing_duration / 60), 2),
+                CallTariffTypeEnum::MIN_MIN->value => round($conn_price + $this->tariff->supplier_price_in * (ceil($this->getRealBillingDuration() / 60)), 2),
+                default => round($conn_price + $this->tariff->supplier_price_in * ($this->getRealBillingDuration() / 60), 2),
             };
         }
         return 0;
@@ -177,6 +179,26 @@ class Call extends \yii\db\ActiveRecord
         return "/monitor/$y/$m/$d/$this->record_link";
     }
 
+    public function getRealBillingDuration()
+    {
+        if(!isset($this->_real_billing_duration)) {
+            $record_duration = 0;
+
+            $src = $this->getRecordPath();
+
+            if(is_file($src) && file_exists($src)) {
+                $getID3 = new \getID3();
+                $info = $getID3->analyze($src);
+                if(isset($info['playtime_seconds'])) {
+                    $record_duration = round($info['playtime_seconds']);
+                }
+            }
+
+            $this->_real_billing_duration =  max($record_duration, $this->billing_duration);
+        }
+        return $this->_real_billing_duration;
+    }
+
     public function getRecord() : string
     {
         $src = $this->getRecordPath();
@@ -184,10 +206,9 @@ class Call extends \yii\db\ActiveRecord
         if(is_file($src) && file_exists($src)) {
             $base64 = base64_encode(file_get_contents($src));
 
+            $duration = 0;
             $getID3 = new \getID3();
             $info = $getID3->analyze($src);
-//            Yii::debug($info);
-            $duration = 0;
             if($info) {
                 if(isset($info['playtime_seconds'])){
                     $duration = $info['playtime_seconds']; // в секундах
