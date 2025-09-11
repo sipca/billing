@@ -186,9 +186,12 @@ class Call extends \yii\db\ActiveRecord
 
             $getID3 = new \getID3();
             $info = $getID3->analyze($src);
-            Yii::debug($info);
-//            $duration = $info['playtime_seconds']; // в секундах
-            $duration = 1;
+//            Yii::debug($info);
+            if($info) {
+                $duration = $info['playtime_seconds']; // в секундах
+            } else {
+                $duration = 0;
+            }
 
             $audio = '
 <audio controls>
