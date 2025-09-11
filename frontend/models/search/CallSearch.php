@@ -79,6 +79,7 @@ class CallSearch extends Call
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
+            Yii::debug($this->getErrors());
             return $dataProvider;
         }
 

@@ -166,10 +166,11 @@ class CallController extends Controller
 
     public function actionLive()
     {
-        $liveCalls = new CallSearch();
-        $dataProvider = $liveCalls->search([
+        $liveCalls = new CallSearch([
             "status" => CallStatusEnum::IN_PROGRESS->value
         ]);
+
+        $dataProvider = $liveCalls->search([]);
 
         return $this->render('live', [
             'dataProvider' => $dataProvider
