@@ -202,6 +202,7 @@ class Call extends \yii\db\ActiveRecord
     public function getRecord() : string
     {
         $src = $this->getRecordPath();
+        Yii::debug($src);
 
         if(is_file($src) && file_exists($src)) {
             $base64 = base64_encode(file_get_contents($src));
