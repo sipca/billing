@@ -184,12 +184,16 @@ class Call extends \yii\db\ActiveRecord
         if(is_file($src) && file_exists($src)) {
             $base64 = base64_encode(file_get_contents($src));
 
+            $getID3 = new \getID3();
+            $info = $getID3->analyze($src);
+            $duration = $info['playtime_seconds']; // в секундах
+
             $audio = '
 <audio controls>
   <source src="data:audio/wav;base64,'.$base64.'" type="audio/wav">
   Your browser does not support the audio tag.
 </audio>
-<a href="/call/download-audio?call_id='.$this->call_id.'&name='.$this->call_id.'.wav" target="_blank"><i class="fas fa-download"></i></a>
+<a href="/call/download-audio?call_id='.$this->call_id.'&name='.$this->call_id.'.wav" target="_blank"><i class="fas fa-download"></i></a> ('.$duration.')
 ';
         } else {
             $audio = '';

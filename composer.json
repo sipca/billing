@@ -30,7 +30,8 @@
         "longman/telegram-bot": "^0.83.1",
         "ext-intl": "*",
         "level23/pami": "*",
-        "phpoffice/phpspreadsheet": "^5.1"
+        "phpoffice/phpspreadsheet": "^5.1",
+        "james-heinrich/getid3": "^1.9"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
