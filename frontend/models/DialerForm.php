@@ -106,9 +106,9 @@ class DialerForm extends Model
         $result = [];
 
         foreach ($rows as $index => $row) {
-            if ($index === 1) {
-                continue; // пропускаем заголовок
-            }
+//            if ($index === 1) {
+//                continue; // пропускаем заголовок
+//            }
 
             $name  = trim((string)$row['A']); // столбец A — Имя
             $phone = preg_replace('/\D+/', '', (string)$row['B']); // столбец B — Телефон (оставляем только цифры)
