@@ -104,6 +104,7 @@ class ApiController extends Controller
                 Yii::debug("Tariff found: $tariff->id");
                 $model->tariff_id = $tariff->id;
             }
+            $model->assignTariff();
         }
 
         $model->save();

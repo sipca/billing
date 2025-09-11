@@ -108,17 +108,22 @@ class Call extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if($this->isNewRecord && $this->tariff_id === null) {
-            if($this?->line?->tariff?->default_call_tariff_id) {
-                $this->tariff_id = $this?->line?->tariff?->default_call_tariff_id;
-            } else if(env('DEFAULT_CALL_TARIFF_ID')) {
-                $this->tariff_id = env('DEFAULT_CALL_TARIFF_ID');
-            }
+            $this->assignTariff();
         }
 
         if($this->status === CallStatusEnum::ANSWERED->value && $this?->line?->tolerance_billing_duration) {
             $this->billing_duration += $this?->line?->tolerance_billing_duration;
         }
         return parent::beforeSave($insert);
+    }
+
+    public function assignTariff() : void
+    {
+        if($this?->line?->tariff?->default_call_tariff_id) {
+            $this->tariff_id = $this?->line?->tariff?->default_call_tariff_id;
+        } else if(env('DEFAULT_CALL_TARIFF_ID')) {
+            $this->tariff_id = env('DEFAULT_CALL_TARIFF_ID');
+        }
     }
 
     public function getSum() : float
