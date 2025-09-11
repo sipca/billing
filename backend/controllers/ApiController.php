@@ -88,6 +88,11 @@ class ApiController extends Controller
         $model->billing_duration = Yii::$app->request->get('billsec');
         $model->status = CallStatusEnum::mapFromCdr(Yii::$app->request->get('status'))->value;
         $model->record_link = Yii::$app->request->get('recording');
+
+        if(Yii::$app->request->get('tariff_id')) {
+            $model->tariff_id = Yii::$app->request->get('tariff_id');
+        }
+
         $model->save();
 
         $model->charge();
