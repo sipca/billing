@@ -74,7 +74,7 @@ class DialerForm extends Model
             $originate->setTimeout(20000);
             $originate->setVariable('CLIENT_NAME', $name);
             $originate->setVariable('CALLER_ID_NUMBER', $phone);
-            $originate->setVariable('INTERNAL_EXT', $extString);
+            $originate->setVariable('OPERATORS', $extString);
 
             \Yii::debug($originate->serialize());
 
