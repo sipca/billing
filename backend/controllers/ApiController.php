@@ -80,6 +80,11 @@ class ApiController extends Controller
         Yii::$app->response->format = Response::FORMAT_RAW;
 
         $model = Call::findOne(Yii::$app->request->get('call_id'));
+
+        if(!$model) {
+            return "OK";
+        }
+
         $model->billing_duration = Yii::$app->request->get('billsec');
         $model->status = CallStatusEnum::mapFromCdr(Yii::$app->request->get('status'))->value;
         $model->record_link = Yii::$app->request->get('recording');
