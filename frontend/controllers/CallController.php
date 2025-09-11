@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 ini_set("memory_limit", "-1");
 
+use common\enums\CallStatusEnum;
 use common\models\ami\LiveCalls;
 use common\models\Call;
 use frontend\models\DialerForm;
@@ -12,6 +13,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * CallController implements the CRUD actions for Call model.
@@ -151,6 +153,10 @@ class CallController extends Controller
         $model = new DialerForm();
 
         if($model->load($this->request->post()) && $model->validate()) {
+            $model->file = UploadedFile::getInstance($model, 'file');
+
+            $model->save();
+
             $model->dial();
             Yii::$app->session->setFlash("success", "Dialed!");
         }
@@ -160,8 +166,10 @@ class CallController extends Controller
 
     public function actionLive()
     {
-        $liveCalls = new LiveCalls();
-        $dataProvider = $liveCalls->search(Yii::$app->user->identity->id);
+        $liveCalls = new CallSearch();
+        $dataProvider = $liveCalls->search([
+            "status" => CallStatusEnum::IN_PROGRESS->value
+        ]);
 
         return $this->render('live', [
             'dataProvider' => $dataProvider

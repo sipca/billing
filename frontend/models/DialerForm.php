@@ -2,21 +2,26 @@
 
 namespace frontend\models;
 
+use common\models\ClientNumber;
 use common\models\Line;
 use PAMI\Client\Impl\ClientImpl;
 use PAMI\Message\Action\OriginateAction;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use yii\base\Model;
+use yii\web\UploadedFile;
 
 class DialerForm extends Model
 {
     public $numbers;
+    public $file;
     public $lines;
 
     public function rules()
     {
         return [
-            [['numbers', 'lines'], 'required'],
+            [['lines'], 'required'],
             [['numbers', 'lines'], 'safe'],
+            [['file'], 'file', 'skipOnEmpty' => true],
         ];
     }
 
@@ -38,7 +43,9 @@ class DialerForm extends Model
         $client = new ClientImpl($options);
         $client->open();
 
-        $numbers = array_filter(array_map('trim', explode("\n", $this->numbers)));
+        $numbers1 = $this->parseFile();
+        $numbers2 = []; //$this->parseNumbers();
+        $numbers = array_merge($numbers1, $numbers2);
 
         $extString = $extOnlyNumString = "";
         $lines = Line::find()
@@ -55,19 +62,10 @@ class DialerForm extends Model
             $extString .= $driver."/" .$line->sip_num;
             $extOnlyNumString .= $line->sip_num;
         }
-//        print_r($extString.PHP_EOL);
 
-        foreach ($numbers as $line) {
-            $explode = explode(',', $line);
-            if(count($explode) >= 2) {
-                [$phone, $name] = array_map('trim', explode(',', $line));
-            } else {
-                $phone = $name = trim($line);
-            }
+        foreach ($numbers as $phone => $name) {
 
             $channel = "$driver/$phone@$dialer_trunk";
-
-//            print_r($channel . PHP_EOL);
 
             $originate = new OriginateAction($channel);
             $originate->setContext($dialer_context);
@@ -78,14 +76,60 @@ class DialerForm extends Model
             $originate->setTimeout(20000);
             $originate->setVariable('CLIENT_NAME', $name);
             $originate->setVariable('CALLER_ID_NUMBER', $phone);
-//            $originate->setVariable('EXT_ONLY_NUMS', $extOnlyNumString);
             $originate->setVariable('OPERATORS', $extString);
 
-            \Yii::debug($originate->serialize());
+//            \Yii::debug($originate->serialize());
 
             $client->send($originate);
             usleep(500000);
         }
 
+    }
+
+    private function parseFile()
+    {
+        /** @var UploadedFile $file */
+        $file = $this->file;
+
+        $spreadsheet = IOFactory::load($file->tempName);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $rows = $sheet->toArray(null, true, true, true);
+
+        $result = [];
+
+        foreach ($rows as $index => $row) {
+//            if ($index === 1) {
+//                continue; // пропускаем заголовок
+//            }
+
+            $name  = trim($row['A']); // столбец A — Имя
+            $phone = preg_replace('/\D+/', '', $row['B']); // столбец B — Телефон (оставляем только цифры)
+
+            if (!empty($name) && !empty($phone)) {
+                $result[$phone] = $name;
+            }
+        }
+
+        \Yii::debug($result);
+
+        return $result;
+    }
+
+    private function parseNumbers()
+    {
+        return array_filter(array_map('trim', explode("\n", $this->numbers)));
+    }
+
+    public function save()
+    {
+        $numbers = $this->parseFile();
+        foreach ($numbers as $phone => $name) {
+            $model = new ClientNumber([
+                "number" => (string) $phone,
+                "name" => $name,
+            ]);
+            $model->save();
+        }
     }
 }

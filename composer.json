@@ -29,7 +29,8 @@
         "kartik-v/yii2-widget-select2": "^2.2",
         "longman/telegram-bot": "^0.83.1",
         "ext-intl": "*",
-        "level23/pami": "*"
+        "level23/pami": "*",
+        "phpoffice/phpspreadsheet": "^5.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

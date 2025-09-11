@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             "options" => ["class" => "mb-3"],
         ]
     ]); ?>
+    <?=$form->field($model, "file")->fileInput()?>
     <?=$form->field($model, "numbers")->textarea(["rows" => 5])?>
     <?=$form->field($model, "lines")->widget(Select2::class, [
         "data" => \common\models\Line::find()->joinWith('users')->where(["user.id" => Yii::$app->user->id])->select(["line.name", "line.id"])->indexBy("id")->column(),
