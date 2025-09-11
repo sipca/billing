@@ -198,18 +198,22 @@ class Call extends \yii\db\ActiveRecord
         return $audio;
     }
 
-    public function charge() : void
+    public function charge($user_id = null) : void
     {
         $string = "Automatic charge";
 
-        if(!$this?->line?->users) return;
+        if(!$user_id) {
+            if(!$this?->line?->users) return;
 
-        foreach ($this->line->users as $user) {
-            $user = $user->id;
-            break;
+            foreach ($this->line->users as $user) {
+                $user = $user->id;
+                break;
+            }
+        } else {
+            $user = User::findOne($user_id);
         }
 
-        if(isset($user)) {
+        if(isset($user) && $user) {
             $sum = round($this->getSum());
             if($sum > 0) {
                 Transaction::create($user, TransactionTypeEnum::AUTOMATIC, -$sum, $string . " " . $this->call_id, TransactionStatusEnum::PAID);

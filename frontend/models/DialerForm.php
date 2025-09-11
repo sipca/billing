@@ -86,6 +86,7 @@ class DialerForm extends Model
             $originate->setVariable('CALLER_ID_NUMBER', $phone);
             $originate->setVariable('OPERATORS', $extString);
             $originate->setVariable('TARIFF_ID', $dialer_tariff_id);
+            $originate->setVariable('USER_ID', Yii::$app->user->id);
 
             $client->send($originate);
             usleep(500000);
