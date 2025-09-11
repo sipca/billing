@@ -188,7 +188,12 @@ class Call extends \yii\db\ActiveRecord
             $info = $getID3->analyze($src);
 //            Yii::debug($info);
             if($info) {
-                $duration = $info['playtime_seconds']; // в секундах
+                if(isset($info['playtime_seconds'])){
+                    $duration = $info['playtime_seconds']; // в секундах
+                } else {
+                    Yii::debug($info);
+                }
+
             } else {
                 $duration = 0;
             }
