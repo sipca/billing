@@ -206,18 +206,6 @@ class Call extends \yii\db\ActiveRecord
         if(is_file($src) && file_exists($src)) {
             $base64 = base64_encode(file_get_contents($src));
 
-            $duration = 0;
-            $getID3 = new \getID3();
-            $info = $getID3->analyze($src);
-            if($info) {
-                if(isset($info['playtime_seconds'])){
-                    $duration = $info['playtime_seconds']; // в секундах
-                } else {
-                    Yii::debug($info);
-                }
-
-            }
-
             $audio = '
 <audio controls>
   <source src="data:audio/wav;base64,'.$base64.'" type="audio/wav">
