@@ -93,6 +93,21 @@ class ApiController extends Controller
     public function actionCallAssign()
     {
         Yii::$app->response->format = Response::FORMAT_RAW;
+
+        $model = Call::findOne(Yii::$app->request->get('call_id'));
+        $model->source = Yii::$app->request->get('operator');
+
+        $line = Line::findOne(["sip_num" => Yii::$app->request->get('operator')]);
+        if($line) {
+            $model->line_id = $line->id;
+            if($tariff = CallTariff::getTariffByLineIdAndNumber($model->line_id, Yii::$app->request->get('number'))) {
+                Yii::debug("Tariff found: $tariff->id");
+                $model->tariff_id = $tariff->id;
+            }
+        }
+
+        $model->save();
+
         return "OK";
     }
 }
