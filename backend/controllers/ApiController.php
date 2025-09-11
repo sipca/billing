@@ -100,7 +100,7 @@ class ApiController extends Controller
         $line = Line::findOne(["sip_num" => Yii::$app->request->get('operator')]);
         if($line) {
             $model->line_id = $line->id;
-            if($tariff = CallTariff::getTariffByLineIdAndNumber($model->line_id, Yii::$app->request->get('number'))) {
+            if($tariff = CallTariff::getTariffByLineIdAndNumber($model->line_id, $model->destination)) {
                 Yii::debug("Tariff found: $tariff->id");
                 $model->tariff_id = $tariff->id;
             }
