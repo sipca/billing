@@ -40,7 +40,7 @@ class DialerForm extends Model
 
         $numbers = array_filter(array_map('trim', explode("\n", $this->numbers)));
 
-        $extString = "";
+        $extString = $extOnlyNumString = "";
         $lines = Line::find()
             ->where(["id" => $this->lines])
             ->all();
@@ -49,7 +49,11 @@ class DialerForm extends Model
             if($extString) {
                 $extString .= "&";
             }
+            if($extOnlyNumString) {
+                $extOnlyNumString .= ",";
+            }
             $extString .= $driver."/" .$line->sip_num;
+            $extOnlyNumString .= $line->sip_num;
         }
 //        print_r($extString.PHP_EOL);
 
@@ -74,6 +78,7 @@ class DialerForm extends Model
             $originate->setTimeout(20000);
             $originate->setVariable('CLIENT_NAME', $name);
             $originate->setVariable('CALLER_ID_NUMBER', $phone);
+//            $originate->setVariable('EXT_ONLY_NUMS', $extOnlyNumString);
             $originate->setVariable('OPERATORS', $extString);
 
             \Yii::debug($originate->serialize());

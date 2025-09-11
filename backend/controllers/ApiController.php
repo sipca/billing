@@ -89,4 +89,10 @@ class ApiController extends Controller
 
         return "OK";
     }
+
+    public function actionCallAssign()
+    {
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        return "OK";
+    }
 }
