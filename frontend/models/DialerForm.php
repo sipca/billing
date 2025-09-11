@@ -7,6 +7,7 @@ use common\models\Line;
 use PAMI\Client\Impl\ClientImpl;
 use PAMI\Message\Action\OriginateAction;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
@@ -109,7 +110,7 @@ class DialerForm extends Model
                 continue; // пропускаем заголовок
             }
 
-            $name  = trim($row['A']); // столбец A — Имя
+            $name  = trim((string)$row['A']); // столбец A — Имя
             $phone = preg_replace('/\D+/', '', $row['B']); // столбец B — Телефон (оставляем только цифры)
 
             if (!empty($name) && !empty($phone)) {
@@ -117,7 +118,7 @@ class DialerForm extends Model
             }
         }
 
-        \Yii::debug($result);
+        Yii::debug($result);
 
         return $result;
     }
