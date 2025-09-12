@@ -238,6 +238,9 @@ class Call extends \yii\db\ActiveRecord
             }
         } else {
             $user = User::findOne($user_id);
+            if($user) {
+                $user = $user->id;
+            }
         }
 
         if(isset($user) && $user) {
