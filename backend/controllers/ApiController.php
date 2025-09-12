@@ -96,7 +96,7 @@ class ApiController extends Controller
         $model->save();
 
         if($user_id = Yii::$app->request->get('user_id')) {
-            $model->charge($user_id);
+            $model->charge((int) $user_id);
         } else {
             $model->charge();
         }
