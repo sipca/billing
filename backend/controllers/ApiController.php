@@ -33,7 +33,8 @@ class ApiController extends Controller
                     ->one();
 
                 if($lastCall) {
-                    $diff = time() - $lastCall->created_at;
+                    $diff = time() - $lastCall->updated_at;
+
                     if($diff < $line->delay_sec) {
                         return "DENY";
                     }
