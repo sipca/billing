@@ -57,6 +57,7 @@ $icon = FAS::i(FAS::_CIRCLE, [
             'payBillingDayText',
             'pay_date',
             'tolerance_billing_duration',
+            'delay_sec:duration',
             'created_at:datetime',
             'updated_at:datetime',
         ],

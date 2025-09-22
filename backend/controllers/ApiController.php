@@ -25,6 +25,21 @@ class ApiController extends Controller
         $line = Line::findOne(["sip_num" => $caller]);
         
         if($line) {
+            if($line->delay_sec) {
+                $lastCall = Call::find()
+                    ->where(["line_id" => $line->id, "direction" => Call::DIRECTION_OUT])
+                    ->orderBy(["id" => SORT_DESC])
+                    ->limit(1)
+                    ->one();
+
+                if($lastCall) {
+                    $diff = time() - $lastCall->created_at;
+                    if($diff < $line->delay_sec) {
+                        return "DENY";
+                    }
+                }
+            }
+
             $users = $line->users;
             if($users) {
                 foreach ($users as $user) {

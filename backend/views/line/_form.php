@@ -73,7 +73,15 @@ for ($i = 1; $i <= 7; $i++) {
         </div>
     </div>
 
-    <?= $form->field($model, 'tolerance_billing_duration')->textInput() ?>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'tolerance_billing_duration')->textInput() ?>
+        </div>
+        <div class="col-6">
+            <?= $form->field($model, 'delay_sec')->textInput() ?>
+        </div>
+    </div>
+
     <?= $form->field($model, 'description')->textarea() ?>
 
     <div class="form-group">
