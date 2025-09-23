@@ -34,8 +34,13 @@ class ApiController extends Controller
 
                 if($lastCall) {
                     $diff = time() - $lastCall->updated_at;
+                    Yii::debug([
+                        "updated_at" => $lastCall->updated_at,
+                        'diff' => $diff
+                    ]);
 
                     if($diff < $line->delay_sec) {
+                        Yii::debug("DENY");
                         return "DENY";
                     }
                 }
