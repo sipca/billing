@@ -35,7 +35,7 @@ class ApiController extends Controller
                 if($lastCall) {
                     $diff = time() - $lastCall->updated_at;
                     Yii::debug([
-                        "updated_at" => $lastCall->updated_at,
+                        "last_call" => $lastCall->toArray(),
                         'diff' => $diff
                     ]);
 
