@@ -39,7 +39,7 @@ class ApiController extends Controller
                         'diff' => $diff
                     ]);
 
-                    if($diff < $line->delay_sec) {
+                    if($diff <= $line->delay_sec) {
                         Yii::debug("DENY");
                         return "DENY";
                     }
