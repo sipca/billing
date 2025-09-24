@@ -28,6 +28,7 @@ class ApiController extends Controller
             if($line->delay_sec) {
                 $lastCall = Call::find()
                     ->where(["line_id" => $line->id, "direction" => Call::DIRECTION_OUT])
+                    ->andWhere(["!=", "status", CallStatusEnum::FAILED->value])
                     ->orderBy(["id" => SORT_DESC])
                     ->limit(1)
                     ->one();
