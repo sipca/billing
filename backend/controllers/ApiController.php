@@ -39,12 +39,13 @@ class ApiController extends Controller
 //                        "last_call" => $lastCall->toArray(),
 //                        'diff' => $diff
 //                    ]);
+                    $delay = $line->delay_sec;
 
                     if($lastCall->status === CallStatusEnum::FAILED->value) {
-                        $diff = time() - 5;
+                        $delay = 5;
                     }
 
-                    if($diff <= $line->delay_sec) {
+                    if($diff <= $delay) {
                         Yii::debug("DENY");
                         return "DENY";
                     }
