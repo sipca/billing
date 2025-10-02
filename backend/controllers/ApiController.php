@@ -36,9 +36,9 @@ class ApiController extends Controller
                 ->count();
             if($totalCalls1Hour > 3) {
                 Yii::debug("2MANY");
-
                 return "2MANY";
             }
+
             if($line->delay_sec) {
                 $lastCall = Call::find()
                     ->where(["line_id" => $line->id, "direction" => Call::DIRECTION_OUT])
@@ -57,7 +57,8 @@ class ApiController extends Controller
 
                     if($diff <= $delay) {
                         Yii::debug("DENY");
-                        return "WAIT-$diff";
+                        $d = $delay - $diff;
+                        return "WAIT-$d";
                     }
                 }
             }
