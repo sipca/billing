@@ -57,7 +57,7 @@ class ApiController extends Controller
 
                     if($diff <= $delay) {
                         Yii::debug("DENY");
-                        return "DENY";
+                        return "WAIT-$diff";
                     }
                 }
             }
