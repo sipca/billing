@@ -25,6 +25,20 @@ class ApiController extends Controller
         $line = Line::findOne(["sip_num" => $caller]);
         
         if($line) {
+            $num = substr($number, 2);
+            $totalCalls1Hour = Call::find()
+                ->where([
+                    "line_id" => $line->id,
+                    "direction" => Call::DIRECTION_OUT
+                ])
+                ->andWhere(["like", "destination", $num])
+                ->andWhere([">=", "created_at", time() - 60 * 60])
+                ->count();
+            if($totalCalls1Hour > 3) {
+                Yii::debug("2MANY");
+
+                return "2MANY";
+            }
             if($line->delay_sec) {
                 $lastCall = Call::find()
                     ->where(["line_id" => $line->id, "direction" => Call::DIRECTION_OUT])
@@ -35,14 +49,10 @@ class ApiController extends Controller
 
                 if($lastCall) {
                     $diff = time() - $lastCall->updated_at;
-//                    Yii::debug([
-//                        "last_call" => $lastCall->toArray(),
-//                        'diff' => $diff
-//                    ]);
                     $delay = $line->delay_sec;
 
                     if($lastCall->status === CallStatusEnum::FAILED->value) {
-                        $delay = 5;
+                        $delay = 10;
                     }
 
                     if($diff <= $delay) {
