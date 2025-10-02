@@ -34,6 +34,7 @@ class ApiController extends Controller
                 ->andWhere(["like", "destination", $num])
                 ->andWhere([">=", "created_at", time() - 60 * 60])
                 ->count();
+
             if($totalCalls1Hour > 3) {
                 Yii::debug("2MANY");
                 return "2MANY";
@@ -58,7 +59,8 @@ class ApiController extends Controller
                     if($diff <= $delay) {
                         Yii::debug("DENY");
                         $d = $delay - $diff;
-                        return "WAIT-$d";
+//                        return "WAIT-$d";
+                        return "DENY";
                     }
                 }
             }
